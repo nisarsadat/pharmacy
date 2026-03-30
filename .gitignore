@@ -1,0 +1,10 @@
+/node_modules
+/public/build
+/vendor
+/.env
+/.env.local
+/storage/*.key
+/storage/app/*
+/storage/framework/*
+/storage/logs/*
+/bootstrap/cache/*
