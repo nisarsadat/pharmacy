@@ -9,8 +9,7 @@ import Toastify from "vue3-toastify";
 import "@/plugins/axios";
 import "vue3-toastify/dist/index.css";
 import "vuetify/styles";
-import "@mdi/font/css/materialdesignicons.css";
-
+import '@mdi/font/css/materialdesignicons.css';
 const app = createApp(App);
 
 app.use(createPinia());
