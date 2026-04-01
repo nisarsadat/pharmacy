@@ -14,7 +14,7 @@
                     <v-col cols="12" sm="3">
                         <v-text-field
                             v-model="AccountRepository.search"
-                            label="Search"
+                            label="جستجو"
                             prepend-inner-icon="mdi-magnify"
                             variant="outlined"
                             name="search"
@@ -27,7 +27,7 @@
                             variant="flat"
                             @click="createPopUp"
                         >
-                            Create
+                            جدید
                         </v-btn>
                     </div>
                 </v-row>
@@ -110,7 +110,7 @@ import Update from "./UpdateAccount.vue";
 let AccountRepository = useAccountRepository();
 
 const headers = [
-    { title: "NAME", key: "name", sortable: false },
+    { title: "نام", key: "name", sortable: false },
     { title: "PRICE", key: "price", sortable: false },
     { title: "DATE", key: "date", sortable: false },
     { title: "NOTE", key: "note", sortable: false },

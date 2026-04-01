@@ -1,18 +1,16 @@
 <template>
-  <v-app>
-    <v-app-bar title="App bar"></v-app-bar>
+    <v-app>
+        <v-app-bar title="App bar"></v-app-bar>
 
-    <v-navigation-drawer>
-          <SidebarMenu />
-    </v-navigation-drawer>
+        <v-navigation-drawer>
+            <SidebarMenu />
+        </v-navigation-drawer>
 
-    <v-main>
-      <v-container>
-        <h1>Main Content</h1>
-      </v-container>
-    </v-main>
-  </v-app>
+        <v-main>
+            <v-container><router-view></router-view> </v-container>
+        </v-main>
+    </v-app>
 </template>
 <script setup>
-import SidebarMenu from './pages/components/SidebarMenu.vue';
+import SidebarMenu from "./pages/components/SidebarMenu.vue";
 </script>

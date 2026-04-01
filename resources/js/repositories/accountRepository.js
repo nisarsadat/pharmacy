@@ -32,8 +32,7 @@ export let useAccountRepository = defineStore("AccountRepository", {
                     `accounts?page=${page}&perPage=${itemsPerPage}`
                 );
 
-                this.accounts = response.data.data;
-                this.totalItems = response.data.meta.total;
+                this.accounts = response.data.items;
                 this.page = page;
             } catch (error) {
                 console.error(error);
