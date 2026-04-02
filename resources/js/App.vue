@@ -1,92 +1,106 @@
 <template>
-  <div class="page">
-    <h1>User List</h1>
-
-    <div class="users">
-      <div v-for="user in users" :key="user.id" class="card">
-        <h3>{{ user.name }}</h3>
-        <p><strong>Email:</strong> {{ user.email }}</p>
-        <p><strong>Role:</strong> {{ user.role }}</p>
-        <p><strong>Status:</strong> 
-          <span :class="user.active ? 'active' : 'inactive'">
-            {{ user.active ? 'Active' : 'Inactive' }}
-          </span>
-        </p>
+  <div id="app">
+    <!-- App Bar -->
+    <header class="appbar">
+      <div class="appbar-content">
+        <h1>{{ pageTitle }}</h1>
+        <p>{{ pageSubtitle }}</p>
       </div>
+    </header>
+
+    <div class="layout">
+      <!-- Content -->
+      <main class="content">
+        <router-view />
+      </main>
+
+      <!-- Right Sidebar Menu -->
+      <aside class="sidebar">
+
+        <router-link to="/accounts" class="menu-item">🏠 اکونت</router-link>
+        <router-link to="/" class="menu-item">🏠 خانه</router-link>
+        <router-link to="/about" class="menu-item">ℹ️ درباره ما</router-link>
+        <router-link to="/contact" class="menu-item">📞 تماس با ما</router-link>
+
+        <!-- Fake Items -->
+        <div class="menu-item">📊 گزارشات</div>
+        <div class="menu-item">⚙️ تنظیمات</div>
+        <div class="menu-item">👤 پروفایل</div>
+        <div class="menu-item">💬 پیام‌ها</div>
+      </aside>
     </div>
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue'
+<script>
+export default {
+  name: "App",
 
-const users = ref([
-  {
-    id: 1,
-    name: 'Ali Ahmad',
-    email: 'ali@example.com',
-    role: 'Admin',
-    active: true,
+  computed: {
+    pageTitle() {
+      return this.$route.meta.title || "خانه";
+    },
+    pageSubtitle() {
+      return this.$route.meta.subtitle || "به برنامه خوش آمدید";
+    },
   },
-  {
-    id: 2,
-    name: 'Sara Khan',
-    email: 'sara@example.com',
-    role: 'User',
-    active: false,
-  },
-  {
-    id: 3,
-    name: 'John Doe',
-    email: 'john@example.com',
-    role: 'Editor',
-    active: true,
-  },
-  {
-    id: 4,
-    name: 'Fatima Noor',
-    email: 'fatima@example.com',
-    role: 'User',
-    active: true,
-  },
-])
+};
 </script>
 
-<style scoped>
-.page {
-  padding: 30px;
+<style>
+#app {
   font-family: Arial, sans-serif;
 }
 
-h1 {
-  text-align: center;
-  margin-bottom: 30px;
+/* App Bar */
+.appbar {
+  background: #1976d2;
+  color: white;
+  padding: 15px;
 }
 
-.users {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
+/* Layout */
+.layout {
+  display: flex;
+  flex-direction: row-reverse; /* Sidebar on RIGHT */
 }
 
-.card {
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background: #f4f4f4;
+  padding: 15px;
+  min-height: 100vh;
+  border-left: 1px solid #ddd;
 }
 
-.card h3 {
+.menu-title {
   margin-bottom: 10px;
 }
 
-.active {
-  color: green;
-  font-weight: bold;
+/* Menu Items */
+.menu-item {
+  display: block;
+  padding: 10px;
+  margin-bottom: 5px;
+  text-decoration: none;
+  color: black;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-.inactive {
-  color: red;
-  font-weight: bold;
+.menu-item:hover {
+  background: #ddd;
+}
+
+.router-link-active {
+  background: #1976d2;
+  color: white;
+}
+
+/* Content */
+.content {
+  flex: 1;
+  padding: 20px;
 }
 </style>
