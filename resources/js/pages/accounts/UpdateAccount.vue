@@ -1,79 +1,89 @@
 <template>
     <v-dialog
-        transition="dialog-top-transition"
         v-model="AccountRepository.updateDialog"
-        width="800px"
+        width="600"
+        transition="dialog-top-transition"
         class="form-wrapper"
     >
-        <template v-slot:default="{ isActive }">
-            <v-card class="px-3 w-full">
-                <v-card-title class="px-6 py-4 d-flex justify-space-between">
-                    <h2>Update Account</h2>
-                    <v-btn
-                        variant="text"
-                        @click="isActive.value = false"
-                        color="red"
-                    >
-                        <v-icon>mdi-close</v-icon>
-                    </v-btn>
-                </v-card-title>
-                <v-divider></v-divider>
-                <v-card-text>
-                    <v-form ref="formRef">
-                        <v-text-field
-                            v-model="formData.name"
-                            variant="outlined"
-                            density="compact"
-                            label="Name*"
-                            :rules="[rules.required]"
-                            class="pb-4"
-                            fullWidth
-                        ></v-text-field>
+        <v-card class="w-full">
+            <!-- Card Header -->
+            <v-card-title
+                class="d-flex justify-space-between align-center px-6 py-4"
+            >
+                <span class="text-h6">ویرایش حساب </span>
+                <v-btn
+                    size="x-small"
+                    color="red"
+                    variant="text"
+                    @click="AccountRepository.updateDialog = false"
+                >
+                    <v-icon size="x-small">mdi-close</v-icon>
+                </v-btn>
+            </v-card-title>
 
-                        <v-text-field
-                            v-model="formData.price"
-                            variant="outlined"
-                            density="compact"
-                            label="Price*"
-                            :rules="[rules.required]"
-                            class="pb-4"
-                        ></v-text-field>
+            <v-divider />
 
-                        <v-text-field
-                            v-model="formData.date"
-                            variant="outlined"
-                            density="compact"
-                            label="Date*"
-                            type="date"
-                            :rules="[rules.required]"
-                            class="pb-4"
-                        ></v-text-field>
+            <!-- Card Form -->
+            <v-card-text>
+                <v-form ref="formRef">
+                    <v-row dense>
+                        <v-col cols="6">
+                            <v-text-field
+                                v-model="formData.name"
+                                label="اسم*"
+                                variant="outlined"
+                                density="compact"
+                                :rules="[rules.required]"
+                            />
+                        </v-col>
+                        <v-col cols="6">
+                            <v-text-field
+                                v-model="formData.price"
+                                label="قیمت *"
+                                variant="outlined"
+                                density="compact"
+                                :rules="[rules.required]"
+                            />
+                        </v-col>
+                    </v-row>
+                    <v-row dense>
+                        <v-col cols="6">
+                            <v-text-field
+                                v-model="formData.date"
+                                label="تاریخ*"
+                                type="date"
+                                variant="outlined"
+                                density="compact"
+                                :rules="[rules.required]"
+                            />
+                        </v-col>
+                        <v-col cols="6">
+                            <v-select
+                                v-model="formData.account_type"
+                                :items="accountTypes"
+                                label="نوعیت اکونت *"
+                                variant="outlined"
+                                density="compact"
+                                :rules="[rules.required]"
+                            />
+                        </v-col>
+                    </v-row>
+                    <v-textarea
+                        v-model="formData.note"
+                        label="نکته "
+                        variant="outlined"
+                        density="compact"
+                    />
+                </v-form>
+            </v-card-text>
 
-                        <v-textarea
-                            v-model="formData.note"
-                            variant="outlined"
-                            density="compact"
-                            label="Note"
-                            class="pb-4"
-                        ></v-textarea>
-
-                        <v-autocomplete
-                            v-model="formData.account_type"
-                            :items="accountTypes"
-                            label="Account Type*"
-                            :rules="[rules.required]"
-                            variant="outlined"
-                            density="compact"
-                        ></v-autocomplete>
-                    </v-form>
-                </v-card-text>
-                <div class="justify-start pl-6 pb-6">
-                    <v-btn color="light-blue-darken-1" @click="updateAccount">
-                        Submit
-                    </v-btn>
-                </div>
-            </v-card>
-        </template>
+            <!-- Card Actions -->
+            <v-card-actions class="px-6 pb-6">
+                <v-btn color="light-blue-darken-1" @click="updateAccount"
+                    >ثبت کردن
+                </v-btn>
+            </v-card-actions>
+        </v-card>
     </v-dialog>
 </template>
 
@@ -81,10 +91,9 @@
 import { reactive, ref, watch } from "vue";
 import { useAccountRepository } from "../../repositories/AccountRepository";
 
-let AccountRepository = useAccountRepository();
+const AccountRepository = useAccountRepository();
 const formRef = ref(null);
 
-// Initialize reactive form with account data
 const formData = reactive({
     id: "",
     name: "",
@@ -94,20 +103,14 @@ const formData = reactive({
     account_type: "",
 });
 
-// Update formData whenever AccountRepository.account changes
 watch(
     () => AccountRepository.account,
     (newAccount) => {
         if (newAccount) {
-            formData.id = newAccount.id;
-            formData.name = newAccount.name;
-            formData.price = newAccount.price;
-            formData.date = newAccount.date;
-            formData.note = newAccount.note;
-            formData.account_type = newAccount.account_type;
+            Object.assign(formData, newAccount);
         }
     },
-    { immediate: true }
+    { immediate: true },
 );
 
 const accountTypes = ["Bank", "Cash", "Digital Wallet"];
