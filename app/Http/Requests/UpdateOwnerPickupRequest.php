@@ -23,7 +23,11 @@ class UpdateOwnerPickupRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'account_id' => 'sometimes|required|exists:accounts,id',
+            'owener_name' => 'sometimes|required|string|max:255',
+            'owener_phone' => 'sometimes|required|string|max:20',
+            'amount' => 'sometimes|required|numeric',
+            'note' => 'nullable|string'
         ];
     }
 }

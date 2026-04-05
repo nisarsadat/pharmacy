@@ -10,10 +10,7 @@ class StoreOwnerPickupRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize(): bool
-    {
-        return false;
-    }
+   
 
     /**
      * Get the validation rules that apply to the request.
@@ -21,13 +18,13 @@ class StoreOwnerPickupRequest extends FormRequest
      * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
-{
-    return [
-        'account_id' => 'required|exists:accounts,id',
-        'owener_name' => 'required|string|max:255',
-        'owener_phone' => 'required|string|max:20',
-        'amount' => 'required|numeric',
-        'note' => 'nullable|string'
-    ];
-}
+    {
+        return [
+            'account_id' => 'required|exists:accounts,id',
+            'owener_name' => 'required|string|max:255',
+            'owener_phone' => 'required|string|max:20',
+            'amount' => 'required|numeric',
+            'note' => 'nullable|string'
+        ];
+    }
 }
