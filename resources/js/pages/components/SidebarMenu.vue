@@ -47,10 +47,9 @@ import { useRouter } from "vue-router";
 // Sidebar routes
 const routes = [
   { path: "/", name: "Home", meta: { title: "خانه" }, icon: "mdi-home" },
-  { path: "/about", name: "About", meta: { title: "درباره ما" }, icon: "mdi-information" },
-  { path: "/contact", name: "Contact", meta: { title: "تماس با ما" }, icon: "mdi-phone" },
   { path: "/accounts", name: "Accounts", meta: { title: "حساب‌ها" }, icon: "mdi-account" },
-  { path: "/expense-category", name: "Accounts", meta: { title: "کتگوری مصارفات " }, icon: "mdi-book " },
+  { path: "/expense-category", name: "Expense-Category", meta: { title: "کتگوری مصارفات " }, icon: "mdi-book " },
+  { path: "/expenses", name: "Expenses", meta: { title: "مصارفات " }, icon: "mdi-book-outline " },
 
 ];
 
