@@ -50,6 +50,8 @@ const routes = [
   { path: "/about", name: "About", meta: { title: "درباره ما" }, icon: "mdi-information" },
   { path: "/contact", name: "Contact", meta: { title: "تماس با ما" }, icon: "mdi-phone" },
   { path: "/accounts", name: "Accounts", meta: { title: "حساب‌ها" }, icon: "mdi-account" },
+  { path: "/expense-category", name: "Accounts", meta: { title: "کتگوری مصارفات " }, icon: "mdi-book " },
+
 ];
 
 export default {
