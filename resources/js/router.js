@@ -2,12 +2,20 @@ import { createRouter, createWebHistory } from "vue-router";
 
 // Pages
 import Home from "./pages/Home.vue";
-import About from "./pages/About.vue";
-import Contact from "./pages/Contact.vue";
 import Accounts from "./pages/accounts/Accounts.vue";
-import ExpenseCategoyIndex from "./pages/expense-category/Expense-categoyIndex.vue";
+import ExpenseCategoyIndex from "./pages/expense-category/Expense-categoryIndex.vue";
+import Expenses from "./pages/Expense/Expenses.vue";
 
 const routes = [
+    {
+        path: "/",
+        name: "Home",
+        component: Home,
+        meta: {
+            title: "خانه",
+            subtitle: "به صفحه اصلی خوش آمدید",
+        },
+    },
     {
         path: "/accounts",
         name: "Accounts",
@@ -26,32 +34,13 @@ const routes = [
             subtitle: "مدیریت کتگوری مصارفات ",
         },
     },
-
     {
-        path: "/",
-        name: "Home",
-        component: Home,
+        path: "/expenses",
+        name: "Expenses",
+        component: Expenses,
         meta: {
-            title: "خانه",
-            subtitle: "به صفحه اصلی خوش آمدید",
-        },
-    },
-    {
-        path: "/about",
-        name: "About",
-        component: About,
-        meta: {
-            title: "درباره ما",
-            subtitle: "معلومات در مورد ما",
-        },
-    },
-    {
-        path: "/contact",
-        name: "Contact",
-        component: Contact,
-        meta: {
-            title: "تماس با ما",
-            subtitle: "با ما در ارتباط باشید",
+            title: "مصارفات ",
+            subtitle: "مدیریت مصارفات ",
         },
     },
 ];
