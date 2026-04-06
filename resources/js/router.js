@@ -6,6 +6,7 @@ import Accounts from "./pages/accounts/Accounts.vue";
 import ExpenseCategoyIndex from "./pages/expense-category/Expense-categoryIndex.vue";
 import Expenses from "./pages/Expense/Expenses.vue";
 import OwnerPickupsIndex from "./pages/owner-pickups/owner-pickupsIndex.vue";
+import WarehouseIndex from "./pages/warehouse/warehouseIndex.vue";
 
 const routes = [
     {
@@ -51,6 +52,15 @@ const routes = [
         meta: {
             title:  "صاحب  ",
             subtitle: "مدیریت صاحب اکونت  ",
+        },
+    },
+     {
+        path: "/warehouse",
+        name: "warehouse",
+        component: WarehouseIndex,
+        meta: {
+            title:  "گدام",
+            subtitle: "مدیریت گدام ها ",
         },
     },
 ];

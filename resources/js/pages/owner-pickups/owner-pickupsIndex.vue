@@ -113,18 +113,17 @@ const createPopUp = () => {
 };
 
 const deleteItem = (id) => {
-    AccountRepository.deleteExpense(id);
+    AccountRepository.deleteOwnerpickup(id);
 };
 
 const editItem = (id) => {
-    AccountRepository.Expense = {};
+    AccountRepository.Ownerpickup = {};
     AccountRepository.fetchAccountsForDropDowns(); // fetch accounts
-    AccountRepository.fetchExpenseCategoryForDropDowns(); // fetch accounts
     if (
-        !AccountRepository.Expense ||
-        Object.keys(AccountRepository.Expense).length === 0
+        !AccountRepository.Ownerpickup ||
+        Object.keys(AccountRepository.Ownerpickup).length === 0
     ) {
-        AccountRepository.fetchExpense(id)
+        AccountRepository.fetchOwnerpickup(id)
             .then(() => {
                 AccountRepository.updateDialog = true;
             })
