@@ -100,8 +100,8 @@ const AccountRepository = useAccountRepository();
 
 const headers = [
     { title: "اکونت", key: "account_id", sortable: false },
-    { title: "اسم صاحب ", key: "owener_name'", sortable: false },
-    { title: "شماره صاحب", key: "daowener_phonete", sortable: false },
+    { title: "اسم صاحب ", key: "owener_name", sortable: false },
+    { title: "شماره صاحب", key: "owener_phone", sortable: false },
     { title: "مقدار ", key: "amount", sortable: false },
     { title: "نوت", key: "note", sortable: false },
     { title: "action", key: "actions", sortable: false },

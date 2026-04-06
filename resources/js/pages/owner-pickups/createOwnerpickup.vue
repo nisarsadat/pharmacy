@@ -21,22 +21,25 @@
                     <v-form ref="formRef">
                         <v-row class="" dense>
                             <v-col cols="6">
-                                <v-text-field
-                                    v-model="formData.name"
+                                <v-select
+                                    v-model="formData.account_id"
+                                    :items="
+                                        AccountRepository.AccountForDropDown
+                                    "
+                                    label="حساب"
+                                    item-title="label"
+                                    item-value="value"
+                                    :rules="[rules.required]"
                                     variant="outlined"
                                     density="compact"
-                                    label="نام*"
-                                    :rules="[rules.required]"
                                 />
                             </v-col>
-
                             <v-col cols="6">
                                 <v-text-field
-                                    v-model="formData.price"
+                                    v-model="formData.owener_name"
                                     variant="outlined"
                                     density="compact"
-                                    label="مقدار*"
-                                    type="number"
+                                    label="نام مالک *"
                                     :rules="[rules.required]"
                                 />
                             </v-col>
@@ -45,20 +48,21 @@
                         <v-row dense>
                             <v-col cols="6">
                                 <v-text-field
-                                    v-model="formData.date"
+                                    v-model="formData.owener_phone"
                                     variant="outlined"
                                     density="compact"
-                                    label="تاریخ"
-                                    type="date"
+                                    label="شماره تماس مالک "
+                                    type="number"
                                     :rules="[rules.required]"
                                 />
                             </v-col>
 
                             <v-col cols="6">
-                                <v-select
-                                    v-model="formData.account_type"
+                                <v-text-field
+                                    v-model="formData.amount"
                                     :items="accountTypes"
-                                    label="نوعیت حساب"
+                                    label="مقدار"
+                                    type="number"
                                     :rules="[rules.required]"
                                     variant="outlined"
                                     density="compact"
@@ -74,7 +78,7 @@
                     </v-form>
                 </v-card-text>
                 <v-card-actions class="px-6 pb-6">
-                    <v-btn color="light-blue-darken-1" @click="createAccount"
+                    <v-btn color="light-blue-darken-1" @click="create"
                         >ثبت کردن
                     </v-btn>
                 </v-card-actions>
@@ -92,8 +96,8 @@ const formRef = ref(null);
 
 const formData = reactive({
     account_id: "",
-    owner_name: "",
-    owner_phone: "",
+    owener_name: "",
+    owener_phone: "",
     amount: "",
     note: "",
 });
@@ -105,10 +109,10 @@ const rules = {
     required: (value) => !!value || "Required.",
 };
 
-const createAccount = async () => {
+const create = async () => {
     const isValid = formRef.value.validate();
     if (isValid) {
-        AccountRepository.createAccount(formData);
+        AccountRepository.createOwnerpickup(formData);
     }
 };
 </script>
