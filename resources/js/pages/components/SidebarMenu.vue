@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <!-- Navigation Drawer / Sidebar -->
+    <!-- Navigation Drawer -->
     <v-navigation-drawer
       v-model="drawer"
       app
@@ -8,29 +8,34 @@
       width="250"
       class="bg-deep-purple darken-3"
     >
-      <v-list nav>
-        <v-list-item
-          v-for="route in routes"
-          :key="route.name"
-          :to="route.path"
-          link
-          rounded
-          class="mb-1"
-        >
-          <v-list-item-icon>
-            <v-icon :icon="route.icon"></v-icon>
-          </v-list-item-icon>
-          <v-list-item-title class="white--text">
-            {{ route.meta.title }}
-          </v-list-item-title>
-        </v-list-item>
+      <v-list nav v-model:opened="openGroups">
+
+        <!-- Home item -->
+        <v-list-item prepend-icon="mdi-home" :to="'/'" title="خانه" link></v-list-item>
+        <v-list-item prepend-icon="mdi-warehouse" :to="'/warehouse'" title="گدام" link></v-list-item>
+
+        <!-- Finance parent group -->
+        <v-list-group value="Finance">
+          <template #activator="{ props }">
+            <v-list-item v-bind="props" prepend-icon="mdi-cash" title="Finance"></v-list-item>
+          </template>
+
+          <!-- Finance sub-items -->
+          <v-list-item
+            v-for="(route, i) in financeRoutes"
+            :key="i"
+            :prepend-icon="route.icon"
+            :title="route.meta.title"
+            :to="route.path"
+            link
+          ></v-list-item>
+        </v-list-group>
+
       </v-list>
 
       <v-spacer></v-spacer>
 
-      <v-btn block color="red" class="ma-2" @click="logout">
-        Logout
-      </v-btn>
+    
     </v-navigation-drawer>
 
     <!-- Main content -->
@@ -40,39 +45,25 @@
   </v-app>
 </template>
 
-<script>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+<script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
-// Sidebar routes
-const routes = [
-  { path: "/", name: "Home", meta: { title: "خانه" }, icon: "mdi-home" },
+const drawer = ref(true)
+const openGroups = ref(['Finance']) // initially open Finance
+
+const router = useRouter()
+
+
+const financeRoutes = [
   { path: "/accounts", name: "Accounts", meta: { title: "حساب‌ها" }, icon: "mdi-account" },
-  { path: "/expense-category", name: "Expense-Category", meta: { title: "کتگوری مصارفات " }, icon: "mdi-book " },
-  { path: "/expenses", name: "Expenses", meta: { title: "مصارفات " }, icon: "mdi-book-outline " },
-  { path: "/Owner-pickup", name: "Expenses", meta: { title: "صاحب  " }, icon: "mdi-account " },
-
-];
-
-export default {
-  name: "Sidebar",
-  setup() {
-    const drawer = ref(true);
-    const router = useRouter();
-
-    const logout = () => {
-      console.log("Logout clicked");
-      // Add your logout logic here
-      router.push("/"); // Example: redirect to home
-    };
-
-    return { drawer, routes, logout };
-  },
-};
+  { path: "/expense-category", name: "Expense-Category", meta: { title: "کتگوری مصارفات" }, icon: "mdi-book" },
+  { path: "/expenses", name: "Expenses", meta: { title: "مصارفات" }, icon: "mdi-book-outline" },
+  { path: "/Owner-pickup", name: "Owner-Pickup", meta: { title: "برداشت صاحب" }, icon: "mdi-account" },
+]
 </script>
 
 <style>
-/* Optional: tweak list item appearance */
 .v-list-item-title {
   font-weight: 500;
 }
