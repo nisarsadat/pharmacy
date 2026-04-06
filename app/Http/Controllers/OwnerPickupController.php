@@ -44,15 +44,14 @@ class OwnerPickupController extends Controller
 
         $account = Account::findOrFail($data['account_id']);
 
-        // check balance
-        if ($account->balance < $data['amount']) {
+        if ($account->price < $data['amount']) {
             return response()->json([
                 'message' => 'Not enough balance'
             ], 400);
         }
 
-        // deduct balance
-        $account->balance -= $data['amount'];
+        // deduct
+        $account->price -= $data['amount'];
         $account->save();
 
         $ownerPickup = OwnerPickup::create($data);
@@ -78,17 +77,16 @@ class OwnerPickupController extends Controller
         $account = $ownerPickup->account;
 
         // rollback old amount
-        $account->balance += $ownerPickup->amount;
+        $account->price += $ownerPickup->amount;
 
-        // check new amount
-        if ($account->balance < $data['amount']) {
+        if ($account->price < $data['amount']) {
             return response()->json([
                 'message' => 'Not enough balance'
             ], 400);
         }
 
-        // apply new amount
-        $account->balance -= $data['amount'];
+        // deduct new amount
+        $account->price -= $data['amount'];
         $account->save();
 
         $ownerPickup->update($data);
@@ -103,8 +101,8 @@ class OwnerPickupController extends Controller
     {
         $account = $ownerPickup->account;
 
-        // return balance
-        $account->balance += $ownerPickup->amount;
+        // return money
+        $account->price += $ownerPickup->amount;
         $account->save();
 
         $ownerPickup->delete();
