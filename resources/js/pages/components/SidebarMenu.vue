@@ -50,6 +50,7 @@ const routes = [
   { path: "/accounts", name: "Accounts", meta: { title: "حساب‌ها" }, icon: "mdi-account" },
   { path: "/expense-category", name: "Expense-Category", meta: { title: "کتگوری مصارفات " }, icon: "mdi-book " },
   { path: "/expenses", name: "Expenses", meta: { title: "مصارفات " }, icon: "mdi-book-outline " },
+  { path: "/Owner-pickup", name: "Expenses", meta: { title: "صاحب  " }, icon: "mdi-account " },
 
 ];
 

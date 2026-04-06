@@ -16,8 +16,14 @@ class Account extends Model
         'note',
         'account_type'
     ];
+
     public function ownerPickups()
     {
-        return $this->hasMany(ownerPickup::class);
+        return $this->hasMany(OwnerPickup::class);
+    }
+
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class);
     }
 }
