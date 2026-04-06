@@ -9,6 +9,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ExpenseResource;
 use App\Http\Requests\StoreExpenseRequest;
 use App\Http\Requests\UpdateExpenseRequest;
+
+
 class ExpenseController extends Controller
 {
     /**
@@ -38,7 +40,6 @@ class ExpenseController extends Controller
     /**
      * Store a new expense
      */
-   use App\Models\Account;
 
     public function store(StoreExpenseRequest $request)
     {
