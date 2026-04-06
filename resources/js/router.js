@@ -5,6 +5,7 @@ import Home from "./pages/Home.vue";
 import Accounts from "./pages/accounts/Accounts.vue";
 import ExpenseCategoyIndex from "./pages/expense-category/Expense-categoryIndex.vue";
 import Expenses from "./pages/Expense/Expenses.vue";
+import OwnerPickupsIndex from "./pages/owner-pickups/owner-pickupsIndex.vue";
 
 const routes = [
     {
@@ -41,6 +42,15 @@ const routes = [
         meta: {
             title: "مصارفات ",
             subtitle: "مدیریت مصارفات ",
+        },
+    },
+     {
+        path: "/Owner-pickup",
+        name: "Owner-pickup",
+        component: OwnerPickupsIndex,
+        meta: {
+            title:  "صاحب  ",
+            subtitle: "مدیریت صاحب اکونت  ",
         },
     },
 ];

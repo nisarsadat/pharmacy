@@ -12,6 +12,8 @@ export let useAccountRepository = defineStore("AccountRepository", {
             ExpenseCategories: [], // ✅ IMPORTANT FIX
             Expense: [],
             Expenses: [], // ✅ IMPORTANT FIX
+            Ownerpickups: ([]),
+            Ownerpickup: ([]), // ✅ IMPORTANT FIX
             AccountForDropDown: [{}], // ✅ IMPORTANT FIX
             ExpenseCategoryForDropDown: [{}], // ✅ IMPORTANT FIX
             isLoading: false,
@@ -47,10 +49,12 @@ export let useAccountRepository = defineStore("AccountRepository", {
             try {
                 const response = await axios.get(`expense-categories`);
                 // Store in dropdown format { label, value }
-                this.ExpenseCategoryForDropDown = response.data.items.map((acc) => ({
-                    label: acc.name, // display name
-                    value: acc.id, // actual id
-                }));
+                this.ExpenseCategoryForDropDown = response.data.items.map(
+                    (acc) => ({
+                        label: acc.name, // display name
+                        value: acc.id, // actual id
+                    }),
+                );
             } catch (error) {
                 console.error(error);
             }
@@ -266,6 +270,78 @@ export let useAccountRepository = defineStore("AccountRepository", {
                 await axios.delete(`expenses/${id}`);
 
                 await this.fetchExpenses({
+                    page: this.page,
+                    itemsPerPage: this.itemsPerPage,
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        // ✅ this is for owner pickup
+        async fetchOwnerpickups({ page, itemsPerPage }) {
+            this.loading = true;
+            try {
+                const response = await axios.get(
+                    `owner-pickups?page=${page}&perPage=${itemsPerPage}`,
+                );
+
+                this.Ownerpickups = response.data.items;
+                this.page = page;
+            } catch (error) {
+                console.error(error);
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        // ✅ Fetch one
+        async fetchOwnerpickup(id) {
+            try {
+                const response = await axios.get(`owner-pickups/${id}`);
+                this.Ownerpickup = response.data.data;
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        // ✅ Create
+        async createOwnerpickup(formData) {
+            try {
+                await axios.post("owner-pickups", formData);
+
+                this.createDialog = false;
+
+                await this.fetchOwnerpickups({
+                    page: this.page,
+                    itemsPerPage: this.itemsPerPage,
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        // ✅ Update
+        async updateOwnerpickup(id, data) {
+            try {
+                await axios.put(`owner-pickups/${id}`, data);
+
+                this.updateDialog = false;
+
+                await this.fetchOwnerpickups({
+                    page: this.page,
+                    itemsPerPage: this.itemsPerPage,
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        // ✅ Delete
+        async deleteOwnerpickup(id) {
+            try {
+                await axios.delete(`owner-pickups/${id}`);
+
+                await this.fetchOwnerpickups({
                     page: this.page,
                     itemsPerPage: this.itemsPerPage,
                 });
