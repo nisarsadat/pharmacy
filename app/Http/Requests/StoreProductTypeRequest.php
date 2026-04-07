@@ -6,10 +6,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreProductTypeRequest extends FormRequest
 {
-    public function authorize()
-    {
-        return true;
-    }
 
     public function rules()
     {
