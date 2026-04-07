@@ -15,6 +15,7 @@ class OwnerPickup extends Model
         'owener_phone',
         'amount',
         'note'
+        
     ];
 
     public function account()

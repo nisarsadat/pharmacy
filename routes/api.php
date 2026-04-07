@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProductTypeController;
 use App\Http\Controllers\Api\WarehouseController;
 use Illuminate\Http\Request;
@@ -21,3 +22,4 @@ Route::apiResource('expenses', ExpenseController::class);
 Route::apiResource('owner-pickups', OwnerPickupController::class);
 Route::apiResource('warehouses', WarehouseController::class);
 Route::apiResource('product-types', ProductTypeController::class);
+Route::apiResource('products', ProductController::class);
