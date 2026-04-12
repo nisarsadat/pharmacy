@@ -13,6 +13,9 @@
         <!-- Home item -->
         <v-list-item prepend-icon="mdi-home" :to="'/'" title="خانه" link></v-list-item>
         <v-list-item prepend-icon="mdi-warehouse" :to="'/warehouse'" title="گدام" link></v-list-item>
+        <v-list-item prepend-icon="mdi-warehouse" :to="'/product-types'" title="نوع پرودکت " link></v-list-item>
+        <v-list-item prepend-icon="mdi-warehouse" :to="'/products'" title=" پرودکت " link></v-list-item>
+
 
         <!-- Finance parent group -->
         <v-list-group value="Finance">

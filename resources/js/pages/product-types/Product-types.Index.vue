@@ -39,13 +39,13 @@
                         v-model:items-per-page="WareHouseRepository.itemsPerPage"
                         :headers="headers"
                         :items-length="WareHouseRepository.totalItems"
-                        :items="WareHouseRepository.warehouses"
+                        :items="WareHouseRepository.producttypes"
                         :loading="WareHouseRepository.loading"
                         :search="WareHouseRepository.search"
                         item-value="id"
                         item-key="id"
                         hover
-                        @update:options="fetchwarehouses"
+                        @update:options="fetchproduct-types"
                     >
                         <!-- Actions Column -->
                         <template v-slot:item.actions="{ item }">
@@ -93,15 +93,13 @@
 <script setup>
 import { onMounted } from "vue";
 import { useWareHouseRepository } from "../../repositories/WareHouseRepository";
-import Create from "./createWarehouse.vue";
-import Update from "./UpdateWarehouse.vue";
+import Create from "./createproducttypes.vue";
+import Update from "./updateproducttypes.vue";
 
 const WareHouseRepository = useWareHouseRepository();
 
 const headers = [
     { title: "اسم", key: "name", sortable: false },
-    { title: "شماره صاحب", key: "owner_phone", sortable: false },
-    { title: "اسم صاحب", key: "owner_name", sortable: false },
     { title: "نوت", key: "note", sortable: false },
     { title: "action", key: "actions", sortable: false },
 ];
@@ -111,16 +109,16 @@ const createPopUp = () => {
 };
 
 const deleteItem = (id) => {
-    WareHouseRepository.deletewarehouse(id);
+    WareHouseRepository.deleteprodcucttype(id);
 };
 
 const editItem = (id) => {
-    WareHouseRepository.warehouse = {};
+    WareHouseRepository.producttypes = {};
     if (
-        !WareHouseRepository.warehouse ||
-        Object.keys(WareHouseRepository.warehouse).length === 0
+        !WareHouseRepository.producttypes ||
+        Object.keys(WareHouseRepository.producttypes).length === 0
     ) {
-        WareHouseRepository.fetchwarehouse(id)
+        WareHouseRepository.fetchproducttype(id)
             .then(() => {
                 WareHouseRepository.updateDialog = true;
             })
@@ -128,22 +126,22 @@ const editItem = (id) => {
     }
 };
 
-const Fetchwarehouses = (options) => {
+const fetchproducttype = (options) => {
     const { page, itemsPerPage } = options;
-    WareHouseRepository.fetchwarehouses({ page, itemsPerPage });
+    WareHouseRepository.fetchproducttypes({ page, itemsPerPage });
 };
 
 onMounted(() => {
-    Fetchwarehouses({ page: 1, itemsPerPage: 5 });
+    fetchproducttype({ page: 1, itemsPerPage: 5 });
 });
 </script>
 
 <style scoped>
-.all-expense {
+.all-producttype {
     transition: all 0.3s ease-in-out;
 }
 
-.all-expense:hover {
+.all-producttype:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }

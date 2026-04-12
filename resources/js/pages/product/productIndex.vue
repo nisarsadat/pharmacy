@@ -1,7 +1,5 @@
 <template>
-    <!-- Dialogs -->
-    <Update v-if="WareHouseRepository.updateDialog" />
-    <Create v-if="WareHouseRepository.createDialog" />
+
 
     <!-- Toolbar -->
 
@@ -22,7 +20,7 @@
 
             <!-- Create Button -->
             <div class="btn d-flex gap-4">
-                <v-btn color="primary" variant="flat" @click="createPopUp">
+                <v-btn color="primary" variant="flat"  @click="$router.push({ name: 'products.create' })">
                     جدید
                     <v-icon>mdi-plus</v-icon>
                 </v-btn>
@@ -39,13 +37,13 @@
                         v-model:items-per-page="WareHouseRepository.itemsPerPage"
                         :headers="headers"
                         :items-length="WareHouseRepository.totalItems"
-                        :items="WareHouseRepository.warehouses"
+                        :items="WareHouseRepository.products"
                         :loading="WareHouseRepository.loading"
                         :search="WareHouseRepository.search"
                         item-value="id"
                         item-key="id"
                         hover
-                        @update:options="fetchwarehouses"
+                        @update:options="fetchproducts"
                     >
                         <!-- Actions Column -->
                         <template v-slot:item.actions="{ item }">
@@ -93,34 +91,36 @@
 <script setup>
 import { onMounted } from "vue";
 import { useWareHouseRepository } from "../../repositories/WareHouseRepository";
-import Create from "./createWarehouse.vue";
-import Update from "./UpdateWarehouse.vue";
 
 const WareHouseRepository = useWareHouseRepository();
 
 const headers = [
     { title: "اسم", key: "name", sortable: false },
-    { title: "شماره صاحب", key: "owner_phone", sortable: false },
-    { title: "اسم صاحب", key: "owner_name", sortable: false },
     { title: "نوت", key: "note", sortable: false },
+    { title: "آیدی گدام ", key: "warehouse_id", sortable: false },
+    { title: "آیدی نوعیت محصول", key: "product_type_id", sortable: false },
+    { title: "کود نمبر", key: "code", sortable: false },
+    { title: "قیمت اصلی", key: "main_price", sortable: false },
+    { title: "هوشدار موجودی ", key: "main_stock_alert", sortable: false },
+    { title: "هوشدار انقضای تاریخ ", key: "expire_date_alert", sortable: false },
+    { title: "تاریخ", key: "date", sortable: false },
+    { title: "مقدار محصول به کارتن", key: "product_amount_carton", sortable: false },
+    { title: "مقدار محصول ", key: "product_amount", sortable: false },
     { title: "action", key: "actions", sortable: false },
 ];
 
-const createPopUp = () => {
-    WareHouseRepository.createDialog = true;
-};
 
 const deleteItem = (id) => {
-    WareHouseRepository.deletewarehouse(id);
+    WareHouseRepository.deleteproduct(id);
 };
 
 const editItem = (id) => {
-    WareHouseRepository.warehouse = {};
+    WareHouseRepository.products = {};
     if (
-        !WareHouseRepository.warehouse ||
-        Object.keys(WareHouseRepository.warehouse).length === 0
+        !WareHouseRepository.products ||
+        Object.keys(WareHouseRepository.products).length === 0
     ) {
-        WareHouseRepository.fetchwarehouse(id)
+        WareHouseRepository.fetchproduct(id)
             .then(() => {
                 WareHouseRepository.updateDialog = true;
             })
@@ -128,22 +128,22 @@ const editItem = (id) => {
     }
 };
 
-const Fetchwarehouses = (options) => {
+const fetchproducts = (options) => {
     const { page, itemsPerPage } = options;
-    WareHouseRepository.fetchwarehouses({ page, itemsPerPage });
+    WareHouseRepository.fetchproducts({ page, itemsPerPage });
 };
 
 onMounted(() => {
-    Fetchwarehouses({ page: 1, itemsPerPage: 5 });
+    fetchproducts({ page: 1, itemsPerPage: 5 });
 });
 </script>
 
 <style scoped>
-.all-expense {
+.all-product {
     transition: all 0.3s ease-in-out;
 }
 
-.all-expense:hover {
+.all-product :hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
