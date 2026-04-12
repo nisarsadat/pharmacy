@@ -14,6 +14,7 @@ class SaleResource extends JsonResource
             'note' => $this->note,
             'date' => $this->date,
             'customer_id' => $this->customer_id,
+            'account_id' => $this->account_id,
             'user_id' => $this->user_id,
             'total_amount' => $this->total_amount,
             'discount' => $this->discount,

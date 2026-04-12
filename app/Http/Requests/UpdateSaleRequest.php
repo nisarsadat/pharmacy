@@ -23,6 +23,7 @@ class UpdateSaleRequest extends FormRequest
             'note' => 'nullable|string',
             'date' => 'sometimes|date',
             'customer_id' => 'sometimes|exists:customers,id',
+            'account_id' => 'required|exists:accounts,id',    
             'user_id' => 'sometimes|exists:users,id',
             'total_amount' => 'sometimes|numeric',
             'discount' => 'nullable|numeric',

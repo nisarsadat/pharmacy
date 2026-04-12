@@ -30,7 +30,7 @@ class StoreSaleRequest extends FormRequest
             'paid_amount' => 'required|numeric',
             'due_amount' => 'required|numeric',
             'payment_status' => 'required|string',
-    
+            'account_id' => 'required|exists:accounts,id',    
             'items' => 'required|array',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.quantity' => 'required|integer',

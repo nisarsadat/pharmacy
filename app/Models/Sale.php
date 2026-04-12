@@ -13,6 +13,7 @@ class Sale extends Model
         'note',
         'date',
         'customer_id',
+        'account_id',
         'user_id',
         'total_amount',
         'discount',
@@ -26,4 +27,5 @@ class Sale extends Model
     {
         return $this->hasMany(SaleItem::class);
     }
+  
 }
