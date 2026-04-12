@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Models\ProductImage;
 use App\Http\Resources\ProductResource;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
@@ -35,8 +36,21 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request)
     {
         $product = Product::create($request->validated());
-
-        return new ProductResource($product);
+    
+        // store images
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+    
+                $path = $image->store('products', 'public');
+    
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'image' => $path
+                ]);
+            }
+        }
+    
+        return new ProductResource($product->load('images'));
     }
 
     public function show(Product $product)
@@ -49,8 +63,26 @@ class ProductController extends Controller
     public function update(UpdateProductRequest $request, Product $product)
     {
         $product->update($request->validated());
-
-        return new ProductResource($product);
+    
+        if ($request->hasFile('images')) {
+    
+            // delete old images (optional)
+            foreach ($product->images as $img) {
+                \Storage::disk('public')->delete($img->image);
+                $img->delete();
+            }
+    
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('products', 'public');
+    
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'image' => $path
+                ]);
+            }
+        }
+    
+        return new ProductResource($product->load('images'));
     }
 
     public function destroy(Product $product)
