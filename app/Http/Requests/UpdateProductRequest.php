@@ -6,10 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateProductRequest extends FormRequest
 {
-    public function authorize()
-    {
-        return true;
-    }
+
 
     public function rules()
     {
@@ -31,6 +28,8 @@ class UpdateProductRequest extends FormRequest
             'product_amount' => 'nullable|integer',
 
             'note' => 'nullable|string',
+            'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpg,jpeg,png',
         ];
     }
 }
