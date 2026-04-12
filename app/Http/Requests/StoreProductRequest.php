@@ -19,7 +19,7 @@ class StoreProductRequest extends FormRequest
             'sale_price' => 'nullable|numeric',
 
             'main_stock_alert' => 'nullable|integer',
-            'expire_date_alert' => 'nullable|integer',
+            'expire_date_alert' => 'nullable|date',
 
             'date' => 'nullable|date',
 
