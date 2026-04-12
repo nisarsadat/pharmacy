@@ -5,10 +5,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreProductRequest extends FormRequest
 {
-    public function authorize()
-    {
-        return true;
-    }
+
 
     public function rules()
     {
@@ -22,7 +19,7 @@ class StoreProductRequest extends FormRequest
             'sale_price' => 'nullable|numeric',
 
             'main_stock_alert' => 'nullable|integer',
-            'expire_date_alert' => 'nullable|integer',
+            'expire_date_alert' => 'nullable|date',
 
             'date' => 'nullable|date',
 
@@ -31,8 +28,8 @@ class StoreProductRequest extends FormRequest
 
             'note' => 'nullable|string',
             
-            'images' => 'required|array',
-            'images.*' => 'image|mimes:jpg,jpeg,png|max:2048',
+            'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpg,jpeg,png',
         ];
     }
 }
