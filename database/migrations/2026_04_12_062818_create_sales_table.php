@@ -17,7 +17,7 @@ return new class extends Migration
         $table->date('date');
         $table->foreignId('customer_id')->constrained()->cascadeOnDelete();
         $table->foreignId('account_id')->constrained()->cascadeOnDelete();
-        $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+        // $table->foreignId('user_id')->constrained()->cascadeOnDelete();
         $table->decimal('total_amount', 10, 2);
         $table->decimal('discount', 10, 2)->default(0);
         $table->decimal('final_amount', 10, 2);
