@@ -17,15 +17,15 @@ class UpdateCustomerRequest extends FormRequest
      * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
-{
-    return [
-        'name' => 'sometimes|string',
-        'last_name' => 'sometimes|string',
-        'father_name' => 'sometimes|string',
-        'phone_number' => 'sometimes|string',
-        'tazkira_number' => 'sometimes|string|unique:customers,tazkira_number,' . $this->customer,
-        'image' => 'nullable|image|mimes:jpg,png,jpeg',
-        'note' => 'nullable|string',
-    ];
-}
+    {
+        return [
+            'name' => 'sometimes|string',
+            'last_name' => 'sometimes|string',
+            'father_name' => 'sometimes|string',
+            'phone_number' => 'sometimes|string',
+            'tazkira_number' => 'sometimes|string|unique:customers,tazkira_number,' . $this->customer->id,
+            'image' => 'nullable|image|mimes:jpg,png,jpeg',
+            'note' => 'nullable|string',
+        ];
+    }
 }

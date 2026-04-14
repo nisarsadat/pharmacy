@@ -22,7 +22,7 @@ return new class extends Migration
         $table->decimal('sale_price', 10, 2)->nullable();
 
         $table->integer('main_stock_alert')->default(0);
-        $table->integer('expire_date_alert')->nullable();
+        $table->date('expire_date_alert')->nullable();
 
         $table->date('date')->nullable();
 

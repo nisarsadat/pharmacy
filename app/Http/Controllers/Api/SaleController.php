@@ -8,29 +8,81 @@ use App\Http\Requests\UpdateSaleRequest;
 use App\Http\Resources\SaleResource;
 use App\Models\Sale;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SaleController extends Controller
 {
+    // =======================
+    // INDEX (WITH PAGINATION)
+    // =======================
     public function index(Request $request)
     {
-        $perPage = $request->get('per_page', 10);
+        $perPage = (int) $request->get('per_page', 10);
 
-        $sales = Sale::with('items')->paginate($perPage);
+        $sales = Sale::with('items')
+            ->latest()
+            ->paginate($perPage);
 
-        return SaleResource::collection($sales);
+        return response()->json([
+            'items' => SaleResource::collection($sales->items()),
+            'pagination' => [
+                'total' => $sales->total(),
+                'per_page' => $sales->perPage(),
+                'current_page' => $sales->currentPage(),
+                'last_page' => $sales->lastPage(),
+                'from' => $sales->firstItem(),
+                'to' => $sales->lastItem(),
+            ]
+        ]);
     }
 
+    // =======================
+    // STORE (FIXED VERSION)
+    // =======================
     public function store(StoreSaleRequest $request)
     {
-        $sale = Sale::create($request->validated());
+        
+        DB::beginTransaction();
 
-        foreach ($request->items as $item) {
-            $sale->items()->create($item);
+        try {
+
+            $data = $request->validated();
+
+            // جدا کردن items از sale data
+            $items = $data['items'];
+            unset($data['items']);
+
+            // ساخت sale
+            $sale = Sale::create($data);
+
+            // ساخت sale items
+            foreach ($items as $item) {
+                $sale->items()->create([
+                    'product_id' => $item['product_id'],
+                    'quantity'   => $item['quantity'],
+                    'price'      => $item['price'],
+                    'total'      => $item['total'],
+                ]);
+            }
+
+            DB::commit();
+
+            return new SaleResource($sale->load('items'));
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return response()->json([
+                'message' => 'Sale creation failed',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        return new SaleResource($sale->load('items'));
     }
 
+    // =======================
+    // SHOW
+    // =======================
     public function show($id)
     {
         $sale = Sale::with('items')->findOrFail($id);
@@ -38,20 +90,28 @@ class SaleController extends Controller
         return new SaleResource($sale);
     }
 
+    // =======================
+    // UPDATE
+    // =======================
     public function update(UpdateSaleRequest $request, $id)
     {
         $sale = Sale::findOrFail($id);
 
         $sale->update($request->validated());
 
-        return new SaleResource($sale);
+        return new SaleResource($sale->load('items'));
     }
 
+    // =======================
+    // DELETE
+    // =======================
     public function destroy($id)
     {
         $sale = Sale::findOrFail($id);
         $sale->delete();
 
-        return response()->json(['message' => 'Deleted successfully']);
+        return response()->json([
+            'message' => 'Sale deleted successfully'
+        ]);
     }
-} 
+}

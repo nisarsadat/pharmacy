@@ -23,7 +23,7 @@ class StoreSaleRequest extends FormRequest
             'note' => 'nullable|string',
             'date' => 'required|date',
             'customer_id' => 'required|exists:customers,id',
-            'user_id' => 'required|exists:users,id',
+            'user_id' => 'nullable|exists:users,id',
             'total_amount' => 'required|numeric',
             'discount' => 'nullable|numeric',
             'final_amount' => 'required|numeric',
