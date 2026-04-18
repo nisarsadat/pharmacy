@@ -40,45 +40,62 @@ class SaleController extends Controller
     // STORE (FIXED VERSION)
     // =======================
     public function store(StoreSaleRequest $request)
-    {
-        
-        DB::beginTransaction();
+{
+    DB::beginTransaction();
 
-        try {
+    try {
 
-            $data = $request->validated();
+        $data = $request->validated();
 
-            // جدا کردن items از sale data
-            $items = $data['items'];
-            unset($data['items']);
+        $items = $data['items'];
+        unset($data['items']);
 
-            // ساخت sale
-            $sale = Sale::create($data);
+        $sale = Sale::create($data);
 
-            // ساخت sale items
-            foreach ($items as $item) {
-                $sale->items()->create([
-                    'product_id' => $item['product_id'],
-                    'quantity'   => $item['quantity'],
-                    'price'      => $item['price'],
-                    'total'      => $item['total'],
-                ]);
+        foreach ($items as $item) {
+
+            // 1. پیدا کردن محصول
+            $product = \App\Models\Product::findOrFail($item['product_id']);
+
+            // 2. چک کردن stock (اختیاری ولی مهم)
+            if ($product->product_amount < $item['quantity']) {
+                throw new \Exception("Not enough stock for product: " . $product->name);
             }
 
-            DB::commit();
+            // 3. ساخت sale item
+            $sale->items()->create([
+                'product_id' => $item['product_id'],
+                'quantity'   => $item['quantity'],
+                'price'      => $item['price'],
+                'total'      => $item['total'],
 
-            return new SaleResource($sale->load('items'));
+                'main_price_per_carton' => $item['main_price_per_carton'] ?? null,
+                'main_price_per_quantity' => $item['main_price_per_quantity'] ?? null,
+                'total_price_per_carton' => $item['total_price_per_carton'] ?? null,
+                'total_price_per_quantity' => $item['total_price_per_quantity'] ?? null,
+                'quantity_product_amount' => $item['quantity_product_amount'] ?? null,
+                'quantity_per_carton' => $item['quantity_per_carton'] ?? null,
+            ]);
 
-        } catch (\Exception $e) {
-
-            DB::rollBack();
-
-            return response()->json([
-                'message' => 'Sale creation failed',
-                'error' => $e->getMessage()
-            ], 500);
+            // 4. کم کردن stock 🔥
+            $product->product_amount -= $item['quantity'];
+            $product->save();
         }
+
+        DB::commit();
+
+        return new SaleResource($sale->load('items'));
+
+    } catch (\Exception $e) {
+
+        DB::rollBack();
+
+        return response()->json([
+            'message' => 'Sale creation failed',
+            'error' => $e->getMessage()
+        ], 500);
     }
+}
 
     // =======================
     // SHOW

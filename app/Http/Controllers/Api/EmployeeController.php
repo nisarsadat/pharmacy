@@ -12,13 +12,30 @@ use App\Http\Requests\UpdateEmployeeRequest;
 class EmployeeController extends Controller
 {
     public function index(Request $request)
-    {
-        $perPage = (int) $request->get('per_page', 10);
+{
+    $perPage = (int) $request->get('per_page', 10);
 
-        $employees = Employee::latest()->paginate($perPage);
+    $employees = Employee::withCount([
+        // شمارش present
+        'attendances as total_present' => function ($q) {
+            $q->where('status', 'present');
+        },
 
-        return EmployeeResource::collection($employees);
-    }
+        // شمارش absent
+        'attendances as total_absent' => function ($q) {
+            $q->where('status', 'absent');
+        },
+
+        // شمارش leave
+        'attendances as total_leave' => function ($q) {
+            $q->where('status', 'leave');
+        },
+    ])
+    ->latest()
+    ->paginate($perPage);
+
+    return EmployeeResource::collection($employees);
+}
 
     public function store(StoreEmployeeRequest $request)
     {
@@ -38,9 +55,21 @@ class EmployeeController extends Controller
     }
 
     public function show(Employee $employee)
-    {
-        return new EmployeeResource($employee);
-    }
+{
+    $employee->loadCount([
+        'attendances as total_present' => function ($q) {
+            $q->where('status', 'present');
+        },
+        'attendances as total_absent' => function ($q) {
+            $q->where('status', 'absent');
+        },
+        'attendances as total_leave' => function ($q) {
+            $q->where('status', 'leave');
+        },
+    ]);
+
+    return new EmployeeResource($employee);
+}
 
     public function update(UpdateEmployeeRequest $request, Employee $employee)
     {

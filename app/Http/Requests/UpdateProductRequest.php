@@ -30,6 +30,10 @@ class UpdateProductRequest extends FormRequest
             'note' => 'nullable|string',
             'images' => 'nullable|array',
             'images.*' => 'image|mimes:jpg,jpeg,png',
+            'main_price_per_carton' => 'nullable|numeric',
+            'main_price_per_quantity' => 'nullable|numeric',
+            'total_price_per_carton' => 'nullable|numeric',
+            'total_price_per_quantity' => 'nullable|numeric',
         ];
     }
 }

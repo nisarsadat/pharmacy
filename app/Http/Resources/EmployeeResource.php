@@ -27,6 +27,10 @@ class EmployeeResource extends JsonResource
             'entry_date' => $this->entry_date,
             'leave_date' => $this->leave_date,
             'work_days' => $this->work_days,
+            'total_present' => $this->total_present ?? 0,
+            'total_absent' => $this->total_absent ?? 0,
+            'total_leave' => $this->total_leave ?? 0,
+
         ];
     }
 }

@@ -14,9 +14,14 @@ class SaleItem extends Model
         'product_id',
         'quantity',
         'price',
-        'total'
+        'total',
+        'main_price_per_carton',
+        'main_price_per_quantity',
+        'total_price_per_carton',
+        'total_price_per_quantity',
+        'quantity_product_amount',
+        'quantity_per_carton'
     ];
-
     public function sale()
     {
         return $this->belongsTo(Sale::class);
