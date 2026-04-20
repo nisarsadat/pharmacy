@@ -24,4 +24,13 @@ class Employee extends Model
         'leave_date',
         'work_days',
     ];
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
+    public function salaries()
+{
+    return $this->hasMany(Salary::class);
+}
 }

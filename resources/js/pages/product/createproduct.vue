@@ -22,7 +22,7 @@
 
                         <v-col cols="6">
                             <v-autocomplete
-                                v-model="formData.prodcut_type_id"
+                                v-model="formData.product_type_id"
                                 label="نوعیت محصول"
                                 :items="
                                     WareHouseRepository.ProductTypesForDropDown
@@ -71,6 +71,16 @@
                                 :rules="[rules.required]"
                             />
                         </v-col>
+                        <v-col cols="6">
+                            <v-text-field
+                                v-model="formData.sale_price"
+                                label="قيمت فروش"
+                                type="number"
+                                variant="outlined"
+                                density="compact"
+                                :rules="[rules.required]"
+                            />
+                        </v-col>
 
                         <v-col cols="6">
                             <v-text-field
@@ -90,8 +100,6 @@
                                 type="date"
                                 variant="outlined"
                                 density="compact"
-                            
-                                :rules="[rules.required]"
                             />
                         </v-col>
 
@@ -152,11 +160,14 @@
 import { reactive, ref, onMounted } from "vue";
 import { useWareHouseRepository } from "../../repositories/WareHouseRepository";
 let WareHouseRepository = useWareHouseRepository();
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 const formRef = ref(null);
 
 const formData = reactive({
     warehouse_id: "",
-    prodcut_type_id: "",
+    product_type_id: "",
     code: "",
     name: "",
     main_price: "",
@@ -179,8 +190,11 @@ const createproducts = async () => {
     const isValid = formRef.value.validate();
     if (isValid) {
         WareHouseRepository.createproducts(formData);
+
+            router.push("/products");
+        
     }
 };
-WareHouseRepository.fetchProductTypesForDropDowns();
 WareHouseRepository.fetchwarehouseForDropDowns();
+WareHouseRepository.fetchProductTypesForDropDowns();
 </script>

@@ -62,10 +62,10 @@ const formData = reactive({
 });
 
 watch(
-    () => WareHouseRepository.producttypes,
-    (newWareHouseRepository) => {
-        if (newWareHouseRepository) {
-            Object.assign(formData, newWareHouseRepository);
+    () => WareHouseRepository.producttype,
+    (newproducrtype) => {
+        if (newproducrtype) {
+            Object.assign(formData, newproducrtype);
         }
     },
     { immediate: true },

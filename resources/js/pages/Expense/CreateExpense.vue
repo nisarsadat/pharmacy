@@ -51,7 +51,7 @@
                                     "
                                     label="کتگوری مصارفات"
                                     item-title="label"
-                                    item-value="value"
+                                    item-value="value"  
                                     :rules="[rules.required]"
                                     variant="outlined"
                                     density="compact"

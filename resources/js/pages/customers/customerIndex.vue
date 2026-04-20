@@ -18,11 +18,7 @@
 
             <!-- Create Button -->
             <div class="btn d-flex gap-4">
-                <v-btn
-                    color="primary"
-                    variant="flat"
-                    @click="$router.push({ name: 'products.create' })"
-                >
+                <v-btn color="primary" variant="flat" @click="createPopUp">
                     جدید
                     <v-icon>mdi-plus</v-icon>
                 </v-btn>
@@ -41,13 +37,13 @@
                         "
                         :headers="headers"
                         :items-length="WareHouseRepository.totalItems"
-                        :items="WareHouseRepository.products"
+                        :items="WareHouseRepository.customers"
                         :loading="WareHouseRepository.loading"
                         :search="WareHouseRepository.search"
                         item-value="id"
                         item-key="id"
                         hover
-                        @update:options="fetchproductsdata"
+                        @update:options="fetchcustomers"
                     >
                         <!-- Actions Column -->
                         <template v-slot:item.actions="{ item }">
@@ -66,7 +62,7 @@
                                             class="cursor-pointer d-flex gap-3 justify-left pb-3"
                                             @click="
                                                 $router.push({
-                                                    name: 'products.edit',
+                                                    name: 'customers.edit',
                                                     params: { id: item.id },
                                                 })
                                             "
@@ -105,48 +101,42 @@ const WareHouseRepository = useWareHouseRepository();
 
 const headers = [
     { title: "اسم", key: "name", sortable: false },
+    { title: "تخلص ", key: "last_name", sortable: false },
+    { title: "ولد ", key: "father_name", sortable: false },
+    { title: "شماره تماس ", key: "phone_number", sortable: false },
+    { title: " شماره تذکره ", key: "tazkira_number", sortable: false },
+    { title: " عکس", key: "image", sortable: false },
     { title: "نوت", key: "note", sortable: false },
-    { title: " گدام ", key: "warehouse", sortable: false },
-    { title: "آیدی نوعیت محصول", key: "product_type", sortable: false },
-    { title: "کود نمبر", key: "code", sortable: false },
-    { title: "قیمت اصلی", key: "main_price", sortable: false },
-    { title: "هوشدار موجودی ", key: "main_stock_alert", sortable: false },
-    {
-        title: "هوشدار انقضای تاریخ ",
-        key: "expire_date_alert",
-        sortable: false,
-    },
-    { title: "تاریخ", key: "date", sortable: false },
-    {
-        title: "مقدار محصول به کارتن",
-        key: "product_amount_carton",
-        sortable: false,
-    },
-    { title: "مقدار محصول ", key: "product_amount", sortable: false },
     { title: "action", key: "actions", sortable: false },
 ];
 
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+const createPopUp = () => {
+    router.push("./customers/create");
+};
 const deleteItem = (id) => {
-    WareHouseRepository.deleteproduct(id);
+    WareHouseRepository.deletecustomer(id);
 };
 
-
-const fetchproductsdata = (options) => {
+const fetchcustomers = (options) => {
     const { page, itemsPerPage } = options;
-    WareHouseRepository.fetchproducts({ page, itemsPerPage });
+    WareHouseRepository.fetchcustomers({ page, itemsPerPage });
 };
 
-// onMounted(() => {
-//     fetchproducts({ page: 1, itemsPerPage: 5 });
-// });
+onMounted(() => {
+    fetchcustomers({ page: 1, itemsPerPage: 5 });
+});
 </script>
 
 <style scoped>
-.all-product {
+.all-customers {
     transition: all 0.3s ease-in-out;
 }
 
-.all-product :hover {
+.all-customers:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }

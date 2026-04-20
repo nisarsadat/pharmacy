@@ -26,5 +26,9 @@ class Account extends Model
     {
         return $this->hasMany(Expense::class);
     }
+    public function salaries()
+{
+    return $this->hasMany(Salary::class);
+}
    
 }

@@ -95,6 +95,7 @@ import { onMounted } from "vue";
 import { useWareHouseRepository } from "../../repositories/WareHouseRepository";
 import Create from "./createproducttypes.vue";
 import Update from "./updateproducttypes.vue";
+import { flipAlign } from "vuetify/lib/util/anchor.mjs";
 
 const WareHouseRepository = useWareHouseRepository();
 

@@ -14,7 +14,7 @@ class Sale extends Model
         'date',
         'customer_id',
         'account_id',
-        'user_id',
+        'user_id', 
         'total_amount',
         'discount',
         'final_amount',

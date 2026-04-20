@@ -34,6 +34,10 @@ class ProductResource extends JsonResource
             'note' => $this->note,
 
             'created_at' => $this->created_at,
+            'main_price_per_carton' => $this->main_price_per_carton,
+            'main_price_per_quantity' => $this->main_price_per_quantity,
+            'total_price_per_carton' => $this->total_price_per_carton,
+            'total_price_per_quantity' => $this->total_price_per_quantity,
         ];
     }
 }

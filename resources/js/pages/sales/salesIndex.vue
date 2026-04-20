@@ -18,11 +18,7 @@
 
             <!-- Create Button -->
             <div class="btn d-flex gap-4">
-                <v-btn
-                    color="primary"
-                    variant="flat"
-                    @click="$router.push({ name: 'products.create' })"
-                >
+                <v-btn color="primary" variant="flat" @click="create"> 
                     جدید
                     <v-icon>mdi-plus</v-icon>
                 </v-btn>
@@ -41,13 +37,13 @@
                         "
                         :headers="headers"
                         :items-length="WareHouseRepository.totalItems"
-                        :items="WareHouseRepository.products"
+                        :items="WareHouseRepository.sales"
                         :loading="WareHouseRepository.loading"
                         :search="WareHouseRepository.search"
                         item-value="id"
                         item-key="id"
                         hover
-                        @update:options="fetchproductsdata"
+                        @update:options="fetchsales"
                     >
                         <!-- Actions Column -->
                         <template v-slot:item.actions="{ item }">
@@ -66,7 +62,7 @@
                                             class="cursor-pointer d-flex gap-3 justify-left pb-3"
                                             @click="
                                                 $router.push({
-                                                    name: 'products.edit',
+                                                    name: 'sales.edit',
                                                     params: { id: item.id },
                                                 })
                                             "
@@ -104,49 +100,45 @@ import { useWareHouseRepository } from "../../repositories/WareHouseRepository";
 const WareHouseRepository = useWareHouseRepository();
 
 const headers = [
-    { title: "اسم", key: "name", sortable: false },
     { title: "نوت", key: "note", sortable: false },
-    { title: " گدام ", key: "warehouse", sortable: false },
-    { title: "آیدی نوعیت محصول", key: "product_type", sortable: false },
-    { title: "کود نمبر", key: "code", sortable: false },
-    { title: "قیمت اصلی", key: "main_price", sortable: false },
-    { title: "هوشدار موجودی ", key: "main_stock_alert", sortable: false },
-    {
-        title: "هوشدار انقضای تاریخ ",
-        key: "expire_date_alert",
-        sortable: false,
-    },
-    { title: "تاریخ", key: "date", sortable: false },
-    {
-        title: "مقدار محصول به کارتن",
-        key: "product_amount_carton",
-        sortable: false,
-    },
-    { title: "مقدار محصول ", key: "product_amount", sortable: false },
-    { title: "action", key: "actions", sortable: false },
+    {title: "تاریخ", key: "date", sortable: false},
+    {title: "آیدی مشتری ", key: "customer_id", sortable: false},
+    {title: "آیدی حساب", key: "account_id", sortable: false},
+    {title: "آیدی استفاده کننده ", key: "user_id", sortable: false},
+    {title: "مقدار موجودی", key: "total_amount", sortable: false},
+    {title: " تخفیف", key: "discount", sortable: false},
+    {title: " مقدار نهایی", key: "final_amount", sortable: false},
+    {title: " مقدار پرداختی", key: "paid_amount", sortable: false},
+    {title: " مقدار قرض", key: "due_amount", sortable: false},
+    {title: " وضعیت پرداخت", key: "payment_status", sortable: false},
+
 ];
 
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+const create = () => {
+    router.push("./sales/create");
+};
 const deleteItem = (id) => {
-    WareHouseRepository.deleteproduct(id);
+    WareHouseRepository.deletesale(id);
 };
 
-
-const fetchproductsdata = (options) => {
+const fetchsales = (options) => {
     const { page, itemsPerPage } = options;
-    WareHouseRepository.fetchproducts({ page, itemsPerPage });
+    WareHouseRepository.fetchsales({ page, itemsPerPage });
 };
 
-// onMounted(() => {
-//     fetchproducts({ page: 1, itemsPerPage: 5 });
-// });
+
 </script>
 
 <style scoped>
-.all-product {
+.all-sales {
     transition: all 0.3s ease-in-out;
 }
 
-.all-product :hover {
+.all-sales:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }

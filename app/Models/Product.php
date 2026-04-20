@@ -21,6 +21,10 @@ class Product extends Model
         'product_amount_carton',
         'product_amount',
         'note',
+        'main_price_per_carton',
+        'main_price_per_quantity',
+        'total_price_per_carton',
+        'total_price_per_quantity',
     ];
 
     // Relations

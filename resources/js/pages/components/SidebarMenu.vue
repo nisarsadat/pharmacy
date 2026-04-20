@@ -15,12 +15,15 @@
         <v-list-item prepend-icon="mdi-warehouse" :to="'/warehouse'" title="گدام" link></v-list-item>
         <v-list-item prepend-icon="mdi-warehouse" :to="'/product-types'" title="نوع پرودکت " link></v-list-item>
         <v-list-item prepend-icon="mdi-warehouse" :to="'/products'" title=" پرودکت " link></v-list-item>
+        <v-list-item prepend-icon="mdi-warehouse" :to="'/customers'" title=" مشتری  " link></v-list-item>
+        <v-list-item prepend-icon="mdi-sale" :to="'/sales'" title=" فروشات  " link></v-list-item>
+        <v-list-item prepend-icon="mdi-sale" :to="'/employees'" title=" کارمندان   " link></v-list-item>
 
 
         <!-- Finance parent group -->
         <v-list-group value="Finance">
           <template #activator="{ props }">
-            <v-list-item v-bind="props" prepend-icon="mdi-cash" title="Finance"></v-list-item>
+            <v-list-item v-bind="props" prepend-icon="mdi-cash" title="بخش مالی "></v-list-item>
           </template>
 
           <!-- Finance sub-items -->

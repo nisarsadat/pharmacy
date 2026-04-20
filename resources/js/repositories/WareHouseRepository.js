@@ -2,6 +2,7 @@
 
 import { defineStore } from "pinia";
 import axios from "@/plugins/axios";
+import Createproduct from "../pages/product/createproduct.vue";
 
 export let useWareHouseRepository = defineStore("WareHouseRepository", {
     state() {
@@ -10,10 +11,18 @@ export let useWareHouseRepository = defineStore("WareHouseRepository", {
             warehouse: [], // ✅ IMPORTANT FIX
             producttype: [],
             producttypes: [], // ✅ IMPORTANT FIX
-            products: ([]),
-            product: ([]), // ✅ IMPORTANT FIX
+            products: [],
+            product: [], // ✅ IMPORTANT FIX
+            employees:[],
+            employee:[],
             ProductTypesForDropDown: [], // ✅ IMPORTANT FIX
-            warehouseForDropDown:[],
+            warehouseForDropDown: [],
+            accountForDropDown: [],
+            customerForDropDown: [],
+            customers: [],
+            customer: [],
+            sales: [],
+            sale: [],
             isLoading: false,
             error: null,
             loading: false,
@@ -35,10 +44,12 @@ export let useWareHouseRepository = defineStore("WareHouseRepository", {
             try {
                 const response = await axios.get(`product-types`);
                 // Store in dropdown format { label, value }
-                this.ProductTypesForDropDown = response.data.items.map((acc) => ({
-                    label: acc.name, // display name
-                    value: acc.id, // actual id
-                }));
+                this.ProductTypesForDropDown = response.data.items.map(
+                    (acc) => ({
+                        label: acc.name, // display name
+                        value: acc.id, // actual id
+                    }),
+                );
             } catch (error) {
                 console.error(error);
             }
@@ -47,12 +58,35 @@ export let useWareHouseRepository = defineStore("WareHouseRepository", {
             try {
                 const response = await axios.get(`warehouses`);
                 // Store in dropdown format { label, value }
-                this.warehouseForDropDown = response.data.items.map(
-                    (acc) => ({
-                        label: acc.name, // display name
-                        value: acc.id, // actual id
-                    }),
-                );
+                this.warehouseForDropDown = response.data.items.map((acc) => ({
+                    label: acc.name, // display name
+                    value: acc.id, // actual id
+                }));
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        async fetchaccountForDropDowns() {
+            try {
+                const response = await axios.get(`accounts`);
+                // Store in dropdown format { label, value }
+                this.accountForDropDown = response.data.items.map((acc) => ({
+                    label: acc.name, // display name
+                    value: acc.id, // actual id
+                }));
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        async fetchcustomerForDropDowns() {
+            try {
+                const response = await axios.get(`customers`);
+                // Store in dropdown format { label, value }
+                this.customerForDropDown = response.data.items.map((acc) => ({
+                    label: acc.name, // display name
+                    value: acc.id, // actual id
+                }));
             } catch (error) {
                 console.error(error);
             }
@@ -150,7 +184,7 @@ export let useWareHouseRepository = defineStore("WareHouseRepository", {
         // ✅ Fetch one
         async fetchproducttype(id) {
             try {
-                const response = await axios.get(`product-type/${id}`);
+                const response = await axios.get(`product-types/${id}`);
                 this.producttype = response.data.data;
             } catch (error) {
                 console.error(error);
@@ -192,9 +226,9 @@ export let useWareHouseRepository = defineStore("WareHouseRepository", {
         // ✅ Delete
         async deleteprodcucttype(id) {
             try {
-                await axios.delete(`prosuct-types/${id}`);
+                await axios.delete(`product-types/${id}`);
 
-                await this.fetchproducttype({
+                await this.fetchproducttypes({
                     page: this.page,
                     itemsPerPage: this.itemsPerPage,
                 });
@@ -211,7 +245,7 @@ export let useWareHouseRepository = defineStore("WareHouseRepository", {
                     `products?page=${page}&perPage=${itemsPerPage}`,
                 );
 
-                this.Expenses = response.data.items;
+                this.customers = response.data.items;
                 this.page = page;
             } catch (error) {
                 console.error(error);
@@ -224,14 +258,14 @@ export let useWareHouseRepository = defineStore("WareHouseRepository", {
         async fetchproduct(id) {
             try {
                 const response = await axios.get(`products/${id}`);
-                this.Expense = response.data.data;
+                this.product = response.data.data;
             } catch (error) {
                 console.error(error);
             }
         },
 
         // ✅ Create
-        async createproduct(formData) {
+        async Createproduct(formData) {
             try {
                 await axios.post("products", formData);
 
@@ -265,9 +299,9 @@ export let useWareHouseRepository = defineStore("WareHouseRepository", {
         // ✅ Delete
         async deleteproduct(id) {
             try {
-                await axios.delete(`products/${id}`);
+                await axios.delete(`customers/${id}`);
 
-                await this.fetchproducts({
+                await this.fetchcustomers({
                     page: this.page,
                     itemsPerPage: this.itemsPerPage,
                 });
@@ -275,6 +309,221 @@ export let useWareHouseRepository = defineStore("WareHouseRepository", {
                 console.error(error);
             }
         },
-      
+        // this is for the customers
+        async fetchcustomers({ page, itemsPerPage }) {
+            this.loading = true;
+            try {
+                const response = await axios.get(
+                    `customers?page=${page}&perPage=${itemsPerPage}`,
+                );
+
+                this.customers = response.data.items;
+                this.page = page;
+            } catch (error) {
+                console.error(error);
+            } finally {
+                this.loading = false;
+            }
         },
+
+        // ✅ Fetch one
+        async fetchcustomer(id) {
+            try {
+                const response = await axios.get(`customers/${id}`);
+                this.customer = response.data.data;
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        // ✅ Create
+        async createcustomers(formData) {
+            try {
+                await axios.post("customers", formData);
+
+                this.createDialog = false;
+
+                await this.fetchcustomers({
+                    page: this.page,
+                    itemsPerPage: this.itemsPerPage,
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        // ✅ Update
+        async updatecustomer(id, data) {
+            try {
+                await axios.put(`customers/${id}`, data);
+
+                this.updateDialog = false;
+
+                await this.fetchcustomers({
+                    page: this.page,
+                    itemsPerPage: this.itemsPerPage,
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        // ✅ Delete
+        async deletecustomer(id) {
+            try {
+                await axios.delete(`customers/${id}`);
+
+                await this.fetchcustomers({
+                    page: this.page,
+                    itemsPerPage: this.itemsPerPage,
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        // this is for the sales
+        async fetchsales({ page, itemsPerPage }) {
+            this.loading = true;
+            try {
+                const response = await axios.get(
+                    `sales?page=${page}&perPage=${itemsPerPage}`,
+                );
+
+                this.sales = response.data.items;
+                this.page = page;
+            } catch (error) {
+                console.error(error);
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        // ✅ Fetch one
+        async fetchsale(id) {
+            try {
+                const response = await axios.get(`sales/${id}`);
+                this.sale = response.data.data;
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        // ✅ Create
+        async createsales(formData) {
+            try {
+                await axios.post("sales", formData);
+
+                this.createDialog = false;
+
+                await this.fetchsales({
+                    page: this.page,
+                    itemsPerPage: this.itemsPerPage,
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        // ✅ Update
+        async updatesale(id, data) {
+            try {
+                await axios.put(`sales/${id}`, data);
+
+                this.updateDialog = false;
+
+                await this.fetchsales({
+                    page: this.page,
+                    itemsPerPage: this.itemsPerPage,
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        // ✅ Delete
+        async deletesale(id) {
+            try {
+                await axios.delete(`sales/${id}`);
+
+                await this.fetchsales({
+                    page: this.page,
+                    itemsPerPage: this.itemsPerPage,
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        },
+          // this is for the employee
+        async fetchemployees({ page, itemsPerPage }) {
+            this.loading = true;
+            try {
+                const response = await axios.get(
+                    `employees?page=${page}&perPage=${itemsPerPage}`,
+                );
+
+                this.employees = response.data.data;
+                this.page = page;
+            } catch (error) {
+                console.error(error);
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        // ✅ Fetch one
+        async fetchemployee(id) {
+            try {
+                const response = await axios.get(`employees/${id}`);
+                this.employee = response.data.data;
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        // ✅ Create
+        async createemployees(formData) {
+            try {
+                await axios.post("employees", formData);
+
+                this.createDialog = false;
+
+                await this.fetchemployees({
+                    page: this.page,
+                    itemsPerPage: this.itemsPerPage,
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        // ✅ Update
+        async updateemployee(id, data) {
+            try {
+                await axios.put(`employees/${id}`, data);
+
+                this.updateDialog = false;
+
+                await this.fetchemployees({
+                    page: this.page,
+                    itemsPerPage: this.itemsPerPage,
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        // ✅ Delete
+        async deletesale(id) {
+            try {
+                await axios.delete(`employees/${id}`);
+
+                await this.fetchemployees({
+                    page: this.page,
+                    itemsPerPage: this.itemsPerPage,
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        },
+    },
 });
