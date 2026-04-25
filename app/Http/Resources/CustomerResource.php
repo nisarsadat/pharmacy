@@ -16,7 +16,7 @@ class CustomerResource extends JsonResource
             'father_name' => $this->father_name,
             'phone_number' => $this->phone_number,
             'tazkira_number' => $this->tazkira_number,
-            'image' => $this->image,
+            'image' => $this->image ? asset('storage/' . $this->image) : null,
             'note' => $this->note,
         ];
     }
