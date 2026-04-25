@@ -2,92 +2,121 @@
     <!-- Dialogs -->
     <Update v-if="AccountRepository.updateDialog" />
     <Create v-if="AccountRepository.createDialog" />
+    <div>
+        <!-- Header -->
+        <v-toolbar
+            class="account-toolbar px-4 px-md-6"
+            color="primary"
+            density="comfortable"
+            flat
+        >
+            <v-toolbar-title class="text-white font-weight-bold">
+                مدیریت اکونت‌ها
+            </v-toolbar-title>
 
-    <!-- Toolbar -->
+            <v-spacer />
 
-    <!-- Search & Create Button -->
-    <v-layout class="pt-6">
-        <v-row class="justify-space-between p-6 pr-8">
-            <!-- Search Field -->
-            <v-col cols="12" sm="3">
-                <v-text-field
-                    v-model="AccountRepository.search"
-                    label="جستجو"
-                    prepend-inner-icon="mdi-magnify"
-                    variant="outlined"
-                    name="search"
-                    density="compact"
-                />
-            </v-col>
+            <v-chip class="ml-2" color="white" variant="tonal" size="small">
+                {{ AccountRepository.totalItems }} مورد
+            </v-chip>
+        </v-toolbar>
 
-            <!-- Create Button -->
-            <div class="btn d-flex gap-4">
-                <v-btn color="primary" variant="flat" @click="createPopUp">
-                    جدید
-                    <v-icon>mdi-plus</v-icon>
-                </v-btn>
-            </div>
-        </v-row>
-    </v-layout>
+        <!-- Controls -->
+        <div class="pa-4 pa-md-6 pb-2">
+            <v-row align="center" justify="space-between" class="ga-3">
+                <v-col cols="12" sm="6" md="4" lg="3">
+                    <v-text-field
+                        v-model="AccountRepository.search"
+                        label="جستجو"
+                        prepend-inner-icon="mdi-magnify"
+                        variant="outlined"
+                        density="comfortable"
+                        hide-details
+                        class="search-field"
+                        clearable
+                    />
+                </v-col>
 
-    <!-- Data Table -->
-    <v-app>
-        <v-main>
-            <v-row>
-                <v-col>
-                    <v-data-table-server
-                        v-model:items-per-page="AccountRepository.itemsPerPage"
-                        :headers="headers"
-                        :items-length="AccountRepository.totalItems"
-                        :items="AccountRepository.accounts"
-                        :loading="AccountRepository.loading"
-                        :search="AccountRepository.search"
-                        item-value="id"
-                        item-key="id"
-                        hover
-                        @update:options="fetchAccounts"
+                <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                    lg="3"
+                    class="d-flex justify-sm-end"
+                >
+                    <v-btn
+                        color="primary"
+                        size="large"
+                        class="create-btn px-5"
+                        variant="flat"
+                        @click="createPopUp"
                     >
-                        <!-- Actions Column -->
-                        <template v-slot:item.actions="{ item }">
-                            <v-menu>
-                                <template v-slot:activator="{ props }">
-                                    <v-btn
-                                        icon="mdi-dots-vertical"
-                                        v-bind="props"
-                                        variant="text"
-                                    />
-                                </template>
-
-                                <v-list>
-                                    <v-list-item>
-                                        <v-list-item-title
-                                            class="cursor-pointer d-flex gap-3 justify-left pb-3"
-                                            @click="editItem(item.id)"
-                                        >
-                                            <v-icon color="green"
-                                                >mdi-square-edit-outline</v-icon
-                                            >
-                                            ویرایش
-                                        </v-list-item-title>
-
-                                        <v-list-item-title
-                                            class="cursor-pointer d-flex gap-3"
-                                            @click="deleteItem(item.id)"
-                                        >
-                                            <v-icon color="red"
-                                                >mdi-delete-outline</v-icon
-                                            >
-                                            حذف کردن
-                                        </v-list-item-title>
-                                    </v-list-item>
-                                </v-list>
-                            </v-menu>
-                        </template>
-                    </v-data-table-server>
+                        <v-icon start>mdi-plus</v-icon>
+                        جدید
+                    </v-btn>
                 </v-col>
             </v-row>
-        </v-main>
-    </v-app>
+        </div>
+
+        <v-divider />
+
+        <!-- Table -->
+        <v-card-text class="pa-0">
+            <v-data-table-server
+                v-model:items-per-page="AccountRepository.itemsPerPage"
+                class="account-table"
+                :headers="headers"
+                :items-length="AccountRepository.totalItems"
+                :items="AccountRepository.accounts"
+                :loading="AccountRepository.loading"
+                :search="AccountRepository.search"
+                item-value="id"
+                item-key="id"
+                hover
+                @update:options="fetchAccounts"
+            >
+                <template v-slot:item.actions="{ item }">
+                    <v-menu location="bottom end">
+                        <template v-slot:activator="{ props }">
+                            <v-btn
+                                icon="mdi-dots-vertical"
+                                v-bind="props"
+                                variant="text"
+                                density="comfortable"
+                                class="action-trigger"
+                            />
+                        </template>
+
+                        <v-list class="action-menu py-2" min-width="180">
+                            <v-list-item
+                                class="action-item"
+                                @click="editItem(item.id)"
+                            >
+                                <template #prepend>
+                                    <v-icon color="green"
+                                        >mdi-square-edit-outline</v-icon
+                                    >
+                                </template>
+                                <v-list-item-title>ویرایش</v-list-item-title>
+                            </v-list-item>
+
+                            <v-list-item
+                                class="action-item"
+                                @click="deleteItem(item.id)"
+                            >
+                                <template #prepend>
+                                    <v-icon color="red"
+                                        >mdi-delete-outline</v-icon
+                                    >
+                                </template>
+                                <v-list-item-title>حذف کردن</v-list-item-title>
+                            </v-list-item>
+                        </v-list>
+                    </v-menu>
+                </template>
+            </v-data-table-server>
+        </v-card-text>
+    </div>
 </template>
 
 <script setup>
@@ -140,20 +169,77 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.all-expense {
-    transition: all 0.3s ease-in-out;
+.account-page {
+    background: linear-gradient(180deg, #f6f8fc 0%, #eef3f9 100%);
+    min-height: 100vh;
 }
 
-.all-expense:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+.account-shell {
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    backdrop-filter: blur(8px);
 }
 
-.btn v-btn {
-    transition: 0.2s;
+.account-toolbar {
+    background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
 }
 
-.btn v-btn:hover {
-    transform: scale(1.05);
+.search-field :deep(.v-field) {
+    border-radius: 14px;
+}
+
+.create-btn {
+    border-radius: 14px;
+    text-transform: none;
+    font-weight: 600;
+    letter-spacing: 0;
+    box-shadow: 0 10px 20px rgba(25, 118, 210, 0.25);
+}
+
+.create-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 26px rgba(25, 118, 210, 0.3);
+}
+
+.account-table :deep(.v-data-table__wrapper) {
+    border-radius: 0 0 20px 20px;
+}
+
+.account-table :deep(thead th) {
+    background: #f8fafc;
+    font-weight: 700;
+    color: #334155;
+    white-space: nowrap;
+}
+
+.account-table :deep(tbody tr:hover) {
+    background: rgba(25, 118, 210, 0.04);
+}
+
+.account-table :deep(td),
+.account-table :deep(th) {
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+.action-trigger {
+    border-radius: 12px;
+}
+
+.action-trigger:hover {
+    background: rgba(25, 118, 210, 0.08);
+}
+
+.action-menu {
+    border-radius: 16px;
+}
+
+.action-item {
+    border-radius: 12px;
+    margin: 4px 8px;
+}
+
+.action-item:hover {
+    background: rgba(0, 0, 0, 0.04);
 }
 </style>

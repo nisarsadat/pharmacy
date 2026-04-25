@@ -3,7 +3,7 @@
         <v-card class="w-full mx-auto" max-width="800">
             <!-- Header -->
             <v-card-title class="px-6 py-3 d-flex justify-space-between">
-                <h2>تغیر  مشتری </h2>
+                <h2>تغیر مشتری</h2>
             </v-card-title>
 
             <!-- Form -->
@@ -59,13 +59,29 @@
                         </v-col>
                         <v-col cols="6">
                             <v-file-input
-                                v-model="formData.image"
-                                label="عکس "
-                                type="image"
-                                density="compact"
-                            />
+                                v-model="image"
+                                label="input image"
+                                placeholder="Upload your image"
+                                prepend-icon="mdi-paperclip"
+                                multiple
+                            >
+                                <template v-slot:selection="{ fileNames }">
+                                    <template
+                                        v-for="fileName in fileNames"
+                                        :key="fileName"
+                                    >
+                                        <v-chip
+                                            class="me-2"
+                                            color="primary"
+                                            size="small"
+                                            label
+                                        >
+                                            {{ fileName }}
+                                        </v-chip>
+                                    </template>
+                                </template>
+                            </v-file-input>
                         </v-col>
-
                     </v-row>
 
                     <v-textarea
@@ -95,15 +111,16 @@ import { useRouter } from "vue-router";
 
 const router = useRouter();
 const formRef = ref(null);
+const image = ref([]);
 
 const formData = reactive({
- name: "",
- last_name: "",
- father_name: "",
- phone_number: "",
- tazkira_number: "",
- image: "",
- note: "",
+    name: "",
+    last_name: "",
+    father_name: "",
+    phone_number: "",
+    tazkira_number: "",
+    image: "",
+    note: "",
 });
 
 // Example account types, you can modify this
@@ -117,8 +134,7 @@ const updatecustomer = async () => {
     if (isValid) {
         WareHouseRepository.updatecustomer(formData);
 
-            router.push("/customers");
-        
+        router.push("/customers");
     }
 };
 // WareHouseRepository.fetchwarehouseForDropDowns();

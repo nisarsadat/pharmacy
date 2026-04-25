@@ -20,7 +20,6 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-
 Route::apiResource('accounts', AccountController::class);
 Route::apiResource('expense-categories', ExpenseCategoryController::class);
 Route::apiResource('expenses', ExpenseController::class);
