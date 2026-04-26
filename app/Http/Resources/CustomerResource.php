@@ -17,7 +17,7 @@ class CustomerResource extends JsonResource
             'phone_number' => $this->phone_number,
             'tazkira_number' => $this->tazkira_number,
             'image' => $this->image 
-            ? url('storage/' . $this->image) 
+            ? url('storage/' . $this->image) . '?t=' . time() 
             : null,
             'note' => $this->note,
         ];

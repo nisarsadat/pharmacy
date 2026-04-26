@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\CustomerResource;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
-
+use Illuminate\Support\Facades\Storage;
 class CustomerController extends Controller
 {
     public function index(Request $request)
@@ -48,18 +48,27 @@ class CustomerController extends Controller
         return new CustomerResource($customer);
     }
 
-    public function update(UpdateCustomerRequest $request, Customer $customer)
-    {
-        $data = $request->validated();
 
-        if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('customers', 'public');
+public function update(UpdateCustomerRequest $request, Customer $customer)
+{
+    $data = $request->validated();
+
+    // اگر عکس جدید آمده باشد
+    if ($request->hasFile('image')) {
+
+        // حذف عکس قبلی اگر موجود باشد
+        if ($customer->image && Storage::disk('public')->exists($customer->image)) {
+            Storage::disk('public')->delete($customer->image);
         }
 
-        $customer->update($data);
-
-        return new CustomerResource($customer);
+        // ذخیره عکس جدید
+        $data['image'] = $request->file('image')->store('customers', 'public');
     }
+
+    $customer->update($data);
+
+    return new CustomerResource($customer);
+}
 
     public function destroy(Customer $customer)
     {
