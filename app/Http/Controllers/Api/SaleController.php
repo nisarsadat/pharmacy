@@ -56,19 +56,19 @@ class SaleController extends Controller
 
             // 1. پیدا کردن محصول
             $product = \App\Models\Product::findOrFail($item['product_id']);
-
-            // 2. چک کردن stock (اختیاری ولی مهم)
-            if ($product->product_amount < $item['quantity']) {
-                throw new \Exception("Not enough stock for product: " . $product->name);
+        
+            // 2. چک کردن موجودی
+            if ($product->product_quantity < $item['quantity']) {
+                throw new \Exception("موجودی کافی نیست برای محصول: " . $product->name);
             }
-
+        
             // 3. ساخت sale item
             $sale->items()->create([
                 'product_id' => $item['product_id'],
                 'quantity'   => $item['quantity'],
                 'price'      => $item['price'],
                 'total'      => $item['total'],
-
+        
                 'main_price_per_carton' => $item['main_price_per_carton'] ?? null,
                 'main_price_per_quantity' => $item['main_price_per_quantity'] ?? null,
                 'total_price_per_carton' => $item['total_price_per_carton'] ?? null,
@@ -76,10 +76,9 @@ class SaleController extends Controller
                 'quantity_product_amount' => $item['quantity_product_amount'] ?? null,
                 'quantity_per_carton' => $item['quantity_per_carton'] ?? null,
             ]);
-
-            // 4. کم کردن stock 🔥
-            $product->product_amount -= $item['quantity'];
-            $product->save();
+        
+            // 4. کم کردن موجودی به شکل درست 🔥
+            $product->decrement('product_quantity', $item['quantity']);
         }
 
         DB::commit();

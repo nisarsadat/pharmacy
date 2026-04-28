@@ -10,19 +10,14 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up()
-    {
-        Schema::create('product_images', function (Blueprint $table) {
-            $table->id();
-    
-            $table->foreignId('product_id')
-                  ->constrained()
-                  ->cascadeOnDelete();
-    
-            $table->string('image'); // image path
-    
-            $table->timestamps();
-        });
-    }
+{
+    Schema::create('product_images', function (Blueprint $table) {
+        $table->id();
+        $table->foreignId('product_id')->constrained()->cascadeOnDelete();
+        $table->string('image');
+        $table->timestamps();
+    });
+}
 
     /**
      * Reverse the migrations.

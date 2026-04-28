@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,25 +10,19 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = [
-        'warehouse_id',
-        'product_type_id',
-        'code',
         'name',
         'main_price',
         'sale_price',
-        'main_stock_alert',
-        'expire_date_alert',
+        'product_quantity',
+        'product_company',
         'date',
-        'product_amount_carton',
-        'product_amount',
+        'expire_date',
+        'produced_date',
         'note',
-        'main_price_per_carton',
-        'main_price_per_quantity',
-        'total_price_per_carton',
-        'total_price_per_quantity',
+        'warehouse_id',
+        'product_type_id',
     ];
 
-    // Relations
     public function warehouse()
     {
         return $this->belongsTo(Warehouse::class);
@@ -37,6 +32,7 @@ class Product extends Model
     {
         return $this->belongsTo(ProductType::class);
     }
+
     public function images()
     {
         return $this->hasMany(ProductImage::class);

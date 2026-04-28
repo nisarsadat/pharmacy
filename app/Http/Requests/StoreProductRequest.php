@@ -1,39 +1,41 @@
 <?php
+
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreProductRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    
 
-
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, ValidationRule|array<mixed>|string>
+     */
     public function rules()
-    {
-        return [
-            'warehouse_id' => 'required|exists:warehouses,id',
-            'product_type_id' => 'required|exists:product_types,id',
-            'code' => 'required|string|unique:products,code',
-            'name' => 'required|string|max:255',
+{
+    return [
+        'name' => 'required|string',
+        'main_price' => 'required|numeric',
+        'sale_price' => 'nullable|numeric',
 
-            'main_price' => 'required|numeric',
-            'sale_price' => 'nullable|numeric',
+        'product_quantity' => 'required|integer|min:0',
 
-            'main_stock_alert' => 'nullable|integer',
-            'expire_date_alert' => 'nullable|string',
+        'product_company' => 'required|string',
 
-            'date' => 'nullable|date',
+        'date' => 'nullable|date',
+        'expire_date' => 'nullable|date',
+        'produced_date' => 'nullable|date',
 
-            'product_amount_carton' => 'nullable|integer',
-            'product_amount' => 'nullable|integer',
+        'note' => 'nullable|string',
 
-            'note' => 'nullable|string',
-            
-            'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpg,jpeg,png',
-            'main_price_per_carton' => 'nullable|numeric',
-            'main_price_per_quantity' => 'nullable|numeric',
-            'total_price_per_carton' => 'nullable|numeric',
-            'total_price_per_quantity' => 'nullable|numeric',
-        ];
-    }
+        'warehouse_id' => 'required|exists:warehouses,id',
+        'product_type_id' => 'required|exists:product_types,id',
+    ];
+}
 }
