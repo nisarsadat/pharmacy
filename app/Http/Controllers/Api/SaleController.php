@@ -4,130 +4,103 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSaleRequest;
-use App\Http\Requests\UpdateSaleRequest;
 use App\Http\Resources\SaleResource;
+use App\Models\Account;
+use App\Models\Product;
 use App\Models\Sale;
+use App\Models\SaleItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class SaleController extends Controller
 {
-    // =======================
-    // INDEX (WITH PAGINATION)
-    // =======================
-    public function index(Request $request)
+    public function index()
     {
-        $perPage = (int) $request->get('per_page', 10);
-
-        $sales = Sale::with('items')
+        $sales = Sale::with(['items.product', 'customer', 'account', 'warehouse'])
             ->latest()
-            ->paginate($perPage);
+            ->paginate(10);
 
-        return response()->json([
-            'items' => SaleResource::collection($sales->items()),
-            'pagination' => [
-                'total' => $sales->total(),
-                'per_page' => $sales->perPage(),
-                'current_page' => $sales->currentPage(),
-                'last_page' => $sales->lastPage(),
-                'from' => $sales->firstItem(),
-                'to' => $sales->lastItem(),
-            ]
-        ]);
+        return SaleResource::collection($sales);
     }
 
-    // =======================
-    // STORE (FIXED VERSION)
-    // =======================
     public function store(StoreSaleRequest $request)
-{
-    DB::beginTransaction();
+    {
+        DB::beginTransaction();
 
-    try {
+        try {
 
-        $data = $request->validated();
+            $data = $request->validated();
+            $items = $data['items'];
+            unset($data['items']);
 
-        $items = $data['items'];
-        unset($data['items']);
+            $total = 0;
 
-        $sale = Sale::create($data);
+            $sale = Sale::create($data);
 
-        foreach ($items as $item) {
+            foreach ($items as $item) {
 
-            // 1. پیدا کردن محصول
-            $product = \App\Models\Product::findOrFail($item['product_id']);
-        
-            // 2. چک کردن موجودی
-            if ($product->product_quantity < $item['quantity']) {
-                throw new \Exception("موجودی کافی نیست برای محصول: " . $product->name);
+                $product = Product::findOrFail($item['product_id']);
+
+                // ❌ check stock
+                if ($product->product_quantity < $item['quantity']) {
+                    throw new \Exception('Not enough stock');
+                }
+
+                $itemTotal = $item['quantity'] * $item['price'];
+                $total += $itemTotal;
+
+                SaleItem::create([
+                    'sale_id' => $sale->id,
+                    'product_id' => $product->id,
+                    'quantity' => $item['quantity'],
+                    'price' => $item['price'],
+                    'total' => $itemTotal,
+                ]);
+
+                // 📉 decrease stock
+                $product->decrement('product_quantity', $item['quantity']);
             }
-        
-            // 3. ساخت sale item
-            $sale->items()->create([
-                'product_id' => $item['product_id'],
-                'quantity'   => $item['quantity'],
-                'price'      => $item['price'],
-                'total'      => $item['total'],
-        
-                'main_price_per_carton' => $item['main_price_per_carton'] ?? null,
-                'main_price_per_quantity' => $item['main_price_per_quantity'] ?? null,
-                'total_price_per_carton' => $item['total_price_per_carton'] ?? null,
-                'total_price_per_quantity' => $item['total_price_per_quantity'] ?? null,
-                'quantity_product_amount' => $item['quantity_product_amount'] ?? null,
-                'quantity_per_carton' => $item['quantity_per_carton'] ?? null,
+
+            $discount = $data['discount'] ?? 0;
+            $final = $total - $discount;
+            $paid = $data['paid_amount'];
+            $due = $final - $paid;
+
+            $sale->update([
+                'total_amount' => $total,
+                'final_amount' => $final,
+                'due_amount' => $due,
             ]);
-        
-            // 4. کم کردن موجودی به شکل درست 🔥
-            $product->decrement('product_quantity', $item['quantity']);
+
+            // 💰 account increase
+            $account = Account::find($data['account_id']);
+            $account->increment('price', $paid);
+
+            DB::commit();
+
+            return new SaleResource($sale->load(['items.product']));
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return response()->json([
+                'error' => $e->getMessage()
+            ], 400);
         }
-
-        DB::commit();
-
-        return new SaleResource($sale->load('items'));
-
-    } catch (\Exception $e) {
-
-        DB::rollBack();
-
-        return response()->json([
-            'message' => 'Sale creation failed',
-            'error' => $e->getMessage()
-        ], 500);
-    }
-}
-
-    // =======================
-    // SHOW
-    // =======================
-    public function show($id)
-    {
-        $sale = Sale::with('items')->findOrFail($id);
-
-        return new SaleResource($sale);
     }
 
-    // =======================
-    // UPDATE
-    // =======================
-    public function update(UpdateSaleRequest $request, $id)
+    public function show(Sale $sale)
     {
-        $sale = Sale::findOrFail($id);
-
-        $sale->update($request->validated());
-
-        return new SaleResource($sale->load('items'));
+        return new SaleResource(
+            $sale->load(['items.product', 'customer', 'account', 'warehouse'])
+        );
     }
 
-    // =======================
-    // DELETE
-    // =======================
-    public function destroy($id)
+    public function destroy(Sale $sale)
     {
-        $sale = Sale::findOrFail($id);
         $sale->delete();
 
-        return response()->json([
-            'message' => 'Sale deleted successfully'
-        ]);
+        return response()->json(['message' => 'Deleted']);
     }
 }

@@ -2,35 +2,40 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateSaleRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-   
+    
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
     public function rules()
     {
         return [
             'note' => 'nullable|string',
             'date' => 'sometimes|date',
+
             'customer_id' => 'sometimes|exists:customers,id',
-            'account_id' => 'required|exists:accounts,id',    
-            // 'user_id' => 'sometimes|exists:users,id',
-            'total_amount' => 'sometimes|numeric',
-            'discount' => 'nullable|numeric',
-            'final_amount' => 'sometimes|numeric',
-            'paid_amount' => 'sometimes|numeric',
-            'due_amount' => 'sometimes|numeric',
-            'payment_status' => 'sometimes|string',
+            'account_id' => 'sometimes|exists:accounts,id',
+            'warehouse_id' => 'sometimes|exists:warehouses,id',
+
+            'discount' => 'nullable|numeric|min:0',
+            'paid_amount' => 'nullable|numeric|min:0',
+
+            'items' => 'sometimes|array|min:1',
+
+            'items.*.product_id' => 'required_with:items|exists:products,id',
+            'items.*.quantity' => 'required_with:items|integer|min:1',
+            'items.*.price' => 'required_with:items|numeric|min:0',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'customer_id.exists' => 'Customer not found.',
+            'account_id.exists' => 'Account not found.',
+            'warehouse_id.exists' => 'Warehouse not found.',
+            'items.array' => 'Items must be an array.',
         ];
     }
 }

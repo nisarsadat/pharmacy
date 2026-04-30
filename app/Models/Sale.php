@@ -14,18 +14,31 @@ class Sale extends Model
         'date',
         'customer_id',
         'account_id',
-        'user_id', 
+        'warehouse_id',
         'total_amount',
         'discount',
         'final_amount',
         'paid_amount',
         'due_amount',
-        'payment_status'
     ];
 
     public function items()
     {
         return $this->hasMany(SaleItem::class);
     }
-  
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
+    public function account()
+    {
+        return $this->belongsTo(Account::class);
+    }
+
+    public function warehouse()
+    {
+        return $this->belongsTo(Warehouse::class);
+    }
 }

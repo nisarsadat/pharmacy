@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class SaleItem extends Model
 {
@@ -15,15 +15,15 @@ class SaleItem extends Model
         'quantity',
         'price',
         'total',
-        'main_price_per_carton',
-        'main_price_per_quantity',
-        'total_price_per_carton',
-        'total_price_per_quantity',
-        'quantity_product_amount',
-        'quantity_per_carton'
     ];
+
     public function sale()
     {
         return $this->belongsTo(Sale::class);
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
     }
 }
