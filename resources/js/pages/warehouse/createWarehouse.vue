@@ -39,6 +39,7 @@
                             />
                             <v-text-field
                                 v-model="formData.owner_phone"
+                                type="tel"
                                 variant="outlined"
                                 density="compact"
                                 label="شماره صاحب"
@@ -64,6 +65,7 @@
 </template>
 
 <script setup>
+
 import { reactive, ref } from "vue";
 import { useWareHouseRepository } from "../../repositories/WareHouseRepository";
 let WareHouseRepository = useWareHouseRepository();
@@ -80,7 +82,12 @@ const formData = reactive({
 
 const rules = {
     required: (value) => !!value || "Required.",
+
+    // ✅ this is for phone validation 
+    phone: (v) =>
+        /^\d{10}$/.test(v) || "Phone number must be exactly 10 digits",
 };
+
 
 const createwarehose = async () => {
     const isValid = formRef.value.validate();

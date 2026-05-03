@@ -105,12 +105,16 @@ const WareHouseRepository = useWareHouseRepository();
 
 const headers = [
     { title: "اسم", key: "name", sortable: false },
-    { title: "نوت", key: "note", sortable: false },
+    { title: "قیمت اصلی", key: "main_price", sortable: false },
+    { title: "قیمت فروش  ", key: "sale_price", sortable: false },
+    
+
     { title: " گدام ", key: "warehouse", sortable: false },
     { title: "آیدی نوعیت محصول", key: "product_type", sortable: false },
     { title: "کود نمبر", key: "code", sortable: false },
-    { title: "قیمت اصلی", key: "main_price", sortable: false },
     { title: "هوشدار موجودی ", key: "main_stock_alert", sortable: false },
+    { title: "نوت", key: "note", sortable: false }, 
+
     {
         title: "هوشدار انقضای تاریخ ",
         key: "expire_date_alert",

@@ -308,7 +308,7 @@ const submitAttendance = async () => {
     }));
 
     try {
-        await axios.post("attendances/bulk", payload);
+        await axios.post("attendances/bulk", { attendances: payload });
         snackbar.value = {
             show: true,
             text: "Attendance saved successfully",

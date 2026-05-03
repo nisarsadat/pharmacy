@@ -20,7 +20,6 @@ import employeeIndex from "./pages/employees/employeeIndex.vue";
 import Createemployee from "./pages/employees/createemployee.vue";
 import updateemployee from "./pages/employees/upateemployee.vue";
 import attendancesIndex from "./pages/attendances/attendancesIndex.vue";
-import createattendances from "./pages/attendances/createattendances.vue";
 
 
 const routes = [
@@ -218,15 +217,7 @@ const routes = [
             subtitle: "مدیریت حاضری",
         },
     },
-    {
-        path: "/createattendances",
-        name: "creatattendances",
-        component: createattendances,
-        merta:{
-            title:"ساختن حاضری",
-            subtitle:"مدیریت ساختن حاضری",
-        },
-    },
+    
 ];
 
 const router = createRouter({

@@ -2,7 +2,6 @@
 
 import { defineStore } from "pinia";
 import axios from "@/plugins/axios";
-import Createattendances from "../pages/attendances/createattendances.vue";
 
 export let usePeopleRepository = defineStore("PeopleRepository", {
     state() {
