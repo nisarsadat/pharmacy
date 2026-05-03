@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Morilog\Jalali\Jalalian;
 use App\Http\Resources\AttendanceResource;
 use App\Http\Requests\StoreAttendanceRequest;
+use App\Http\Requests\BulkAttendanceRequest;
+use Illuminate\Support\Facades\DB;
 
 class AttendanceController extends Controller
 {
@@ -77,4 +79,48 @@ class AttendanceController extends Controller
             'message' => 'Deleted successfully'
         ]);
     }
+    public function bulkStore(BulkAttendanceRequest $request)
+{
+    $records = $request->validated()['attendances'];
+
+    $insertData = [];
+
+    foreach ($records as $item) {
+
+        // تبدیل تاریخ شمسی → میلادی
+        $date = Jalalian::fromFormat('Y-m-d', $item['date'])->toCarbon();
+
+        // اگر حاضر نبود، ساعت‌ها null
+        if ($item['status'] !== 'present') {
+            $item['check_in'] = null;
+            $item['check_out'] = null;
+        }
+
+        $insertData[] = [
+            'employee_id' => $item['employee_id'],
+            'date' => $date,
+            'status' => $item['status'],
+            'check_in' => $item['check_in'] ?? null,
+            'check_out' => $item['check_out'] ?? null,
+            'note' => $item['note'] ?? null,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ];
+    }
+
+    // جلوگیری از duplicate (اختیاری ولی مهم)
+    foreach ($insertData as $data) {
+        Attendance::updateOrCreate(
+            [
+                'employee_id' => $data['employee_id'],
+                'date' => $data['date'],
+            ],
+            $data
+        );
+    }
+
+    return response()->json([
+        'message' => 'Bulk attendance saved successfully'
+    ]);
+}
 }

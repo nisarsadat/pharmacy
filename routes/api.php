@@ -33,3 +33,4 @@ Route::apiResource('product-types', ProductTypeController::class);
 Route::apiResource('products', ProductController::class);
 Route::apiResource('sales', SaleController::class);
 Route::apiResource('salaries', SalaryController::class);
+Route::post('attendances/bulk', [AttendanceController::class, 'bulkStore']);
