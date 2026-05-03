@@ -172,7 +172,7 @@ export let useWareHouseRepository = defineStore("WareHouseRepository", {
                     `product-types?page=${page}&perPage=${itemsPerPage}`,
                 );
 
-                this.producttypes = response.data.items;
+                this.producttypes = response.data;
                 this.page = page;
             } catch (error) {
                 console.error(error);
