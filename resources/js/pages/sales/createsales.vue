@@ -3,7 +3,7 @@
         <v-card class="mx-auto">
             <!-- Header -->
             <v-card-title class="px-6 py-3 d-flex justify-space-between">
-                <h2>ایجاد مشتری</h2>
+                <h2>ایجاد فروشات </h2>
             </v-card-title>
 
             <!-- Form -->
@@ -106,6 +106,14 @@
                                 density="compact"
                             />
                         </v-col>
+                         <v-col cols="6">
+                            <v-text-field
+                                v-model="formData.items"
+                                label=" بخش "
+                                variant="outlined"
+                                density="compact"
+                            />
+                        </v-col>
                     </v-row>
 
                     <v-textarea
@@ -153,14 +161,27 @@ const formData = reactive({
 
 // Example account types, you can modify this
 
+
 const rules = {
     required: (value) => !!value || "Required.",
 };
 
 const createsales = async () => {
-    const isValid = formRef.value.validate();
+    const isValid = await formRef.value.validate();
+
     if (isValid) {
-        WareHouseRepository.createsales(formData);
+
+        // ✅ FIX: convert simple value into required structure
+        formData.items = [
+            {
+                product_id: formData.items || 1,   // default or your value
+                quantity: 1,
+                price: formData.total_amount || 0,
+                total: formData.total_amount || 0,
+            }
+        ];
+
+        await WareHouseRepository.createsales(formData);
 
         router.push("/sales");
     }

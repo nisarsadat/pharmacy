@@ -111,10 +111,13 @@ const headers = [
     {title: " مقدار پرداختی", key: "paid_amount", sortable: false},
     {title: " مقدار قرض", key: "due_amount", sortable: false},
     {title: " وضعیت پرداخت", key: "payment_status", sortable: false},
+    {title: "  بخش", key: "items", sortable: false},
+
 
 ];
 
 import { useRouter } from "vue-router";
+
 
 const router = useRouter();
 

@@ -9,3 +9,144 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+/* =========================
+   TABLE CONTAINER
+========================= */
+.v-data-table {
+    border-radius: 12px;
+    overflow: hidden;
+    background: white !important;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    border-radius: 18px;
+}
+
+/* =========================
+   TABLE HEADER (PRIMARY STYLE)
+========================= */
+.v-data-table thead {
+    background: #1976d2 !important; /* primary color */
+}
+
+.v-data-table thead th {
+    color: white !important;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 14px 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: none !important;
+}
+
+/* =========================
+   TABLE ROW DESIGN
+========================= */
+.v-data-table tbody tr {
+    transition: all 0.2s ease-in-out;
+    border-left: 4px solid transparent;
+    border-left: 4px solid #1976d2; /* left accent border */
+    background: #f5faff !important;
+
+}
+
+/* hover effect */
+.v-data-table tbody tr:hover {
+    background: #f5faff !important;
+    border-left: 4px solid #1976d2; /* left accent border */
+    transform: scale(1.002);
+}
+
+/* zebra style (optional clean look) */
+.v-data-table tbody tr:nth-child(even) {
+    background: #fafafa;
+}
+
+/* =========================
+   TABLE CELLS
+========================= */
+.v-data-table td {
+    border-top: 4px solid #fdfeff; /* left accent border */
+    color: #333;
+}
+
+/* =========================
+   IMAGE AVATAR
+========================= */
+.image-avatar {
+    transition: 0.25s ease;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.image-avatar:hover {
+    transform: scale(1.1);
+    border-color: #1976d2;
+    box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+}
+
+/* =========================
+   BUTTONS               
+========================= */
+.btn v-btn {
+    transition: all 0.2s ease-in-out;
+    border-radius: 10px;
+}
+
+.btn v-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+/* primary create button extra polish */
+.btn .v-btn--variant-flat {
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+/* =========================
+   SEARCH FIELD
+========================= */
+.v-text-field input {
+    font-size: 14px;
+}
+
+.v-text-field .v-field {
+    border-radius: 10px !important;
+}
+
+/* =========================
+   ACTION MENU
+========================= */
+.v-menu .v-list {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.v-list-item-title {
+    transition: 0.2s;
+}
+
+/* .v-list-item-title:hover {
+    background: #f0f6ff;
+    border-radius: 6px;
+} */
+ /* Hide scrollbar in Vuetify navigation drawer */
+.v-navigation-drawer__content {
+    overflow-y: auto;
+}
+
+/* Chrome / Edge / Safari */
+.v-navigation-drawer__content::-webkit-scrollbar {
+    width: 0px;
+    display: none;
+}
+
+/* Firefox */
+.v-navigation-drawer__content {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.app-main {
+    width: 100%;
+    padding: 0 4px;
+}

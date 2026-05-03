@@ -166,7 +166,7 @@ const routes = [
     },
     {
         path: "/sales/create",
-        name: "sales.create",
+        name: "createsales",
         component: Createsales,
         meta: {
             title: "مشتری  ایجاد ",

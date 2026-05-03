@@ -2,121 +2,97 @@
     <!-- Dialogs -->
     <Update v-if="AccountRepository.updateDialog" />
     <Create v-if="AccountRepository.createDialog" />
-    <div>
-        <!-- Header -->
-        <v-toolbar
-            class="account-toolbar px-4 px-md-6"
-            color="primary"
-            density="comfortable"
-            flat
-        >
-            <v-toolbar-title class="text-white font-weight-bold">
-                مدیریت اکونت‌ها
-            </v-toolbar-title>
-
-            <v-spacer />
-
-            <v-chip class="ml-2" color="white" variant="tonal" size="small">
-                {{ AccountRepository.totalItems }} مورد
-            </v-chip>
-        </v-toolbar>
-
+    <!-- Header -->
+    <v-layout class="pt-6">
         <!-- Controls -->
-        <div class="pa-4 pa-md-6 pb-2">
-            <v-row align="center" justify="space-between" class="ga-3">
-                <v-col cols="12" sm="6" md="4" lg="3">
-                    <v-text-field
-                        v-model="AccountRepository.search"
-                        label="جستجو"
-                        prepend-inner-icon="mdi-magnify"
-                        variant="outlined"
-                        density="comfortable"
-                        hide-details
-                        class="search-field"
-                        clearable
-                    />
-                </v-col>
+        <v-row class="justify-space-between p-6 pr-8">
+            <v-col cols="12" sm="3">
+                <v-text-field
+                    v-model="AccountRepository.search"
+                    label="جستجو"
+                    prepend-inner-icon="mdi-magnify"
+                    variant="outlined"
+                    name="search"
+                    density="compact"
+                />
+            </v-col>
 
-                <v-col
-                    cols="12"
-                    sm="6"
-                    md="4"
-                    lg="3"
-                    class="d-flex justify-sm-end"
-                >
-                    <v-btn
-                        color="primary"
-                        size="large"
-                        class="create-btn px-5"
-                        variant="flat"
-                        @click="createPopUp"
+            <div class="btn d-flex gap-4">
+                <v-btn color="primary" variant="flat" @click="createPopUp">
+                    <v-icon start>mdi-plus</v-icon>
+                    جدید
+                </v-btn>
+            </div>
+        </v-row>
+    </v-layout>
+
+    <v-app>
+        <v-main>
+            <v-row>
+                <v-col>
+                    <v-data-table-server
+                        v-model:items-per-page="AccountRepository.itemsPerPage"
+                        :headers="headers"
+                        :items-length="AccountRepository.totalItems"
+                        :items="AccountRepository.accounts"
+                        :loading="AccountRepository.loading"
+                        :search="AccountRepository.search"
+                        item-value="id"
+                        item-key="id"
+                        hover
+                        @update:options="fetchAccounts"
                     >
-                        <v-icon start>mdi-plus</v-icon>
-                        جدید
-                    </v-btn>
+                        <template v-slot:item.actions="{ item }">
+                            <v-menu location="bottom end">
+                                <template v-slot:activator="{ props }">
+                                    <v-btn
+                                        icon="mdi-dots-vertical"
+                                        v-bind="props"
+                                        variant="text"
+                                        density="comfortable"
+                                        class="action-trigger"
+                                    />
+                                </template>
+
+                                <v-list
+                                    class="action-menu py-2"
+                                    min-width="180"
+                                >
+                                    <v-list-item
+                                        class="action-item"
+                                        @click="editItem(item.id)"
+                                    >
+                                        <template #prepend>
+                                            <v-icon color="green"
+                                                >mdi-square-edit-outline</v-icon
+                                            >
+                                        </template>
+                                        <v-list-item-title
+                                            >ویرایش</v-list-item-title
+                                        >
+                                    </v-list-item>
+
+                                    <v-list-item
+                                        class="action-item"
+                                        @click="deleteItem(item.id)"
+                                    >
+                                        <template #prepend>
+                                            <v-icon color="red"
+                                                >mdi-delete-outline</v-icon
+                                            >
+                                        </template>
+                                        <v-list-item-title
+                                            >حذف کردن</v-list-item-title
+                                        >
+                                    </v-list-item>
+                                </v-list>
+                            </v-menu>
+                        </template>
+                    </v-data-table-server>
                 </v-col>
             </v-row>
-        </div>
-
-        <v-divider />
-
-        <!-- Table -->
-        <v-card-text class="pa-0">
-            <v-data-table-server
-                v-model:items-per-page="AccountRepository.itemsPerPage"
-                class="account-table"
-                :headers="headers"
-                :items-length="AccountRepository.totalItems"
-                :items="AccountRepository.accounts"
-                :loading="AccountRepository.loading"
-                :search="AccountRepository.search"
-                item-value="id"
-                item-key="id"
-                hover
-                @update:options="fetchAccounts"
-            >
-                <template v-slot:item.actions="{ item }">
-                    <v-menu location="bottom end">
-                        <template v-slot:activator="{ props }">
-                            <v-btn
-                                icon="mdi-dots-vertical"
-                                v-bind="props"
-                                variant="text"
-                                density="comfortable"
-                                class="action-trigger"
-                            />
-                        </template>
-
-                        <v-list class="action-menu py-2" min-width="180">
-                            <v-list-item
-                                class="action-item"
-                                @click="editItem(item.id)"
-                            >
-                                <template #prepend>
-                                    <v-icon color="green"
-                                        >mdi-square-edit-outline</v-icon
-                                    >
-                                </template>
-                                <v-list-item-title>ویرایش</v-list-item-title>
-                            </v-list-item>
-
-                            <v-list-item
-                                class="action-item"
-                                @click="deleteItem(item.id)"
-                            >
-                                <template #prepend>
-                                    <v-icon color="red"
-                                        >mdi-delete-outline</v-icon
-                                    >
-                                </template>
-                                <v-list-item-title>حذف کردن</v-list-item-title>
-                            </v-list-item>
-                        </v-list>
-                    </v-menu>
-                </template>
-            </v-data-table-server>
-        </v-card-text>
-    </div>
+        </v-main>
+    </v-app>
 </template>
 
 <script setup>

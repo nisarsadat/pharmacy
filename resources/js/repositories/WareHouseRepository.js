@@ -13,8 +13,8 @@ export let useWareHouseRepository = defineStore("WareHouseRepository", {
             producttypes: [], // ✅ IMPORTANT FIX
             products: [],
             product: [], // ✅ IMPORTANT FIX
-            employees:[],
-            employee:[],
+            employees: [],
+            employee: [],
             ProductTypesForDropDown: [], // ✅ IMPORTANT FIX
             warehouseForDropDown: [],
             accountForDropDown: [],
@@ -339,7 +339,11 @@ export let useWareHouseRepository = defineStore("WareHouseRepository", {
         // ✅ Create
         async createcustomers(formData) {
             try {
-                await axios.post("customers", formData);
+                await axios.post("customers", formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                });
 
                 this.createDialog = false;
 
@@ -355,7 +359,14 @@ export let useWareHouseRepository = defineStore("WareHouseRepository", {
         // ✅ Update
         async updatecustomer(id, data) {
             try {
-                await axios.put(`customers/${id}`, data);
+                // 👇 VERY IMPORTANT
+                data.append("_method", "PUT");
+
+                await axios.post(`customers/${id}`, data, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                });
 
                 this.updateDialog = false;
 
@@ -453,7 +464,7 @@ export let useWareHouseRepository = defineStore("WareHouseRepository", {
                 console.error(error);
             }
         },
-          // this is for the employee
+        // this is for the employee
         async fetchemployees({ page, itemsPerPage }) {
             this.loading = true;
             try {

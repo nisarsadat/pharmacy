@@ -21,6 +21,7 @@ export let usePeopleRepository = defineStore("PeopleRepository", {
             showSelect: true,
             totalItems: 0,
             itemKey: "id",
+            employeesdropdown: [],
         };
     },
 
@@ -52,7 +53,7 @@ export let usePeopleRepository = defineStore("PeopleRepository", {
         },
 
         // ✅ Create
-        async Createattendances(formData) {
+        async createattendances(formData) {
             try {
                 await axios.post("attendances", formData);
 
@@ -92,6 +93,21 @@ export let usePeopleRepository = defineStore("PeopleRepository", {
                     page: this.page,
                     itemsPerPage: this.itemsPerPage,
                 });
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        // this is for the drop down of the employees 
+        async fetchemployeesfordropdown() {
+            try {
+                const response = await axios.get(`employees`);
+                // Store in dropdown format { label, value }
+                this.employeesdropdown = response.data.data.map(
+                    (acc) => ({
+                        label: acc.name, // display name
+                        value: acc.id, // actual id
+                    }),
+                );
             } catch (error) {
                 console.error(error);
             }

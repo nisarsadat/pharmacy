@@ -120,6 +120,7 @@ const headers = [
     { title: "تاریخ ورودی", key: "entry_date", sortable: false },
     { title: "تاریخ خروجی ", key: "leave_date", sortable: false },
     { title: "روز کاری ", key: "work_days", sortable: false },
+    { title: "action", key: "actions", sortable: false },
 ];
 
 const deleteItem = (id) => {
