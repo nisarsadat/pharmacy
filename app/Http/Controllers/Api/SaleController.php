@@ -12,6 +12,7 @@ use App\Models\SaleItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+
 class SaleController extends Controller
 {
     public function index()

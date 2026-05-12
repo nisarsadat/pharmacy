@@ -12,23 +12,23 @@ use Illuminate\Support\Facades\Storage;
 class CustomerController extends Controller
 {
     public function index(Request $request)
-{
-    $perPage = (int) $request->get('per_page', 10);
-
-    $customers = Customer::latest()->paginate($perPage);
-
-    return response()->json([
-        'items' => CustomerResource::collection($customers->items()),
-        'pagination' => [
-            'total' => $customers->total(),
-            'per_page' => $customers->perPage(),
-            'current_page' => $customers->currentPage(),
-            'last_page' => $customers->lastPage(),
-            'from' => $customers->firstItem(),
-            'to' => $customers->lastItem(),
-        ]
-    ]);
-}
+    {
+        $perPage = (int) $request->get('per_page', 10);
+    
+        $customers = Customer::with('sales.loans')
+            ->latest()
+            ->paginate($perPage);
+    
+        return response()->json([
+            'items' => CustomerResource::collection($customers->items()),
+            'pagination' => [
+                'total' => $customers->total(),
+                'per_page' => $customers->perPage(),
+                'current_page' => $customers->currentPage(),
+                'last_page' => $customers->lastPage(),
+            ]
+        ]);
+    }
 
     public function store(StoreCustomerRequest $request)
     {
@@ -44,9 +44,11 @@ class CustomerController extends Controller
     }
 
     public function show(Customer $customer)
-    {
-        return new CustomerResource($customer);
-    }
+{
+    $customer->load('sales'); // 👈 load sales here too
+
+    return new CustomerResource($customer);
+}
 
 
 public function update(UpdateCustomerRequest $request, Customer $customer)

@@ -18,4 +18,10 @@ class Customer extends Model
         'image',
         'note',
     ];
+
+    public function sales()
+{
+    return $this->hasMany(Sale::class);
+}
+
 }

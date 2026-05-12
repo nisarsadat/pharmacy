@@ -30,5 +30,10 @@ class Account extends Model
 {
     return $this->hasMany(Salary::class);
 }
+public function incrementBalance($amount)
+{
+    $this->price += $amount;
+    $this->save();
+}
    
 }

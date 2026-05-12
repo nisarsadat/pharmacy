@@ -41,4 +41,9 @@ class Sale extends Model
     {
         return $this->belongsTo(Warehouse::class);
     }
+
+    public function loans()
+{
+    return $this->hasMany(Loan::class);
+}
 }
