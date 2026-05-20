@@ -11,13 +11,6 @@
             border
         >
             <!-- Header -->
-            <v-sheet class="pa-4 pt-6 bg-transparent">
-                <div
-                    class="text-subtitle-1 font-weight-medium text-white text-center"
-                >
-                    سیستم مدیریت فروش
-                </div>
-            </v-sheet>
 
             <v-divider class="mb-3"></v-divider>
 
@@ -98,8 +91,6 @@
                     class="rounded-xl mb-1"
                 ></v-list-item>
 
-                <v-divider class="my-2"></v-divider>
-
                 <!-- Finance parent group -->
                 <v-list-group value="Finance">
                     <template #activator="{ props }">
@@ -122,17 +113,19 @@
                         class="rounded-xl ml-4 mb-1"
                     ></v-list-item>
                 </v-list-group>
+                <v-list-item
+                    prepend-icon="mdi-account-plus"
+                    :to="'/users'"
+                    title="کاربران"
+                    link
+                    class="rounded-xl mb-1"
+                ></v-list-item>
             </v-list>
 
             <!-- Push footer to bottom -->
             <v-spacer></v-spacer>
 
             <!-- Footer -->
-            <v-sheet
-                class="pa-3 text-center bg-transparent text-white text-caption"
-            >
-                سیستم فروش &nbsp;·&nbsp; 2026
-            </v-sheet>
         </v-navigation-drawer>
     </v-app>
 </template>

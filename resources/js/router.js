@@ -16,6 +16,8 @@ import LoginView from "./pages/auth/LoginView.vue";
 // PAGES
 // =========================================
 
+import UsersIndex from "./pages/users/UsersIndex.vue";
+
 import Accounts from "./pages/accounts/Accounts.vue";
 
 import ExpenseCategoyIndex from "./pages/expense-category/Expense-categoryIndex.vue";
@@ -57,7 +59,6 @@ import attendancesIndex from "./pages/attendances/attendancesIndex.vue";
 // =========================================
 
 const routes = [
-
     // =====================================
     // LOGIN
     // =====================================
@@ -81,7 +82,6 @@ const routes = [
         },
 
         children: [
-
             // =================================
             // DASHBOARD
             // =================================
@@ -359,6 +359,17 @@ const routes = [
                     subtitle: "مدیریت حاضری",
                 },
             },
+            {
+                path: "users",
+                name: "users",
+
+                component: UsersIndex,
+
+                meta: {
+                    title: "کاربران",
+                    subtitle: "مدیریت کاربران",
+                },
+            },
         ],
     },
 ];
@@ -377,7 +388,6 @@ const router = createRouter({
 // =========================================
 
 router.beforeEach((to, from, next) => {
-
     const token = sessionStorage.getItem("token");
 
     // =============================
@@ -385,7 +395,6 @@ router.beforeEach((to, from, next) => {
     // =============================
 
     if (to.meta.requiresAuth && !token) {
-
         return next({
             name: "auth.login",
         });
@@ -396,7 +405,6 @@ router.beforeEach((to, from, next) => {
     // =============================
 
     if (to.name === "auth.login" && token) {
-
         return next({
             name: "Home",
         });
