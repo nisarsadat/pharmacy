@@ -119,7 +119,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { useWareHouseRepository } from "../../repositories/WareHouseRepository";
-
+    
 const imageDialog = ref(false);
 const selectedImage = ref(null);
 

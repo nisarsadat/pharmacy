@@ -47,6 +47,20 @@
                         hover
                         @update:options="fetchemployee"
                     >
+                    <!-- this is for showing image  -->
+                      <template v-slot:item.image="{ item }">
+                                <v-avatar
+                                    size="45"
+                                    class="image-avatar elevation-2"
+                                    @click="openImage(item.image)"
+                                >
+                                    <v-img
+                                        v-if="item?.image"
+                                        :src="item.image"
+                                        cover
+                                    />
+                                </v-avatar>
+                            </template>
                         <!-- Actions Column -->
                         <template v-slot:item.actions="{ item }">
                             <v-menu>
@@ -86,7 +100,17 @@
                                 </v-list>
                             </v-menu>
                         </template>
+                        <!-- this is for image which we can click on it and show for us image  -->
                     </v-data-table-server>
+                      <v-dialog v-model="imageDialog" max-width="600">
+                            <v-card class="pa-2">
+                                <v-img
+                                    :src="selectedImage"
+                                    max-height="500"
+                                    contain
+                                />
+                            </v-card>
+                        </v-dialog>
                 </v-col>
             </v-row>
         </v-main>
@@ -94,16 +118,26 @@
 </template>
 
 <script setup>
-import { onMounted } from "vue";
+import { onMounted , ref } from "vue";
 import { useWareHouseRepository } from "../../repositories/WareHouseRepository";
+
+// this three codes for image 
+const imageDialog = ref(false);
+const selectedImage = ref(null);
+
+const openImage = (img) => {
+    selectedImage.value = img;
+    imageDialog.value = true;
+};
 
 const WareHouseRepository = useWareHouseRepository();
 
 const headers = [
+    { title: " عکس", key: "image", sortable: false },
+
     { title: "اسم", key: "name", sortable: false },
     { title: "ولد", key: "father_name", sortable: false },
     { title: "تخلص", key: "last_name", sortable: false },
-    { title: "عکس", key: "image", sortable: false },
     { title: "شماره تذکره ", key: "tazkira_number", sortable: false },
     { title: "شماره تماس ", key: "phone_number", sortable: false },
     { title: "شماره واتساپ", key: "whatsapp_number", sortable: false },
@@ -122,6 +156,10 @@ const headers = [
     { title: "روز کاری ", key: "work_days", sortable: false },
     { title: "action", key: "actions", sortable: false },
 ];
+
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const deleteItem = (id) => {
     WareHouseRepository.deleteemployee(id);
@@ -152,11 +190,11 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.all-employee {
+.all-customers {
     transition: all 0.3s ease-in-out;
 }
 
-.all-employee:hover {
+.all-customers:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
@@ -167,5 +205,16 @@ onMounted(() => {
 
 .btn v-btn:hover {
     transform: scale(1.05);
+}
+.imagepart {
+    border-radius: 50%;
+}
+.image-avatar {
+    transition: 0.2s ease;
+    cursor: pointer;
+}
+
+.image-avatar:hover {
+    transform: scale(1.1);
 }
 </style>

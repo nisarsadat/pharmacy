@@ -2,7 +2,7 @@
     <v-container class="form-wrapper">
         <!-- Header -->
         <v-card-title class="px-6 py-3 d-flex justify-space-between">
-            <h2>create customer</h2>
+            <h2> ساختن مشتری </h2>
         </v-card-title>
 
         <!-- Form -->
@@ -71,10 +71,13 @@
                     <v-col cols="6">
                         <v-text-field
                             v-model="formData.phone_number"
+                            type="tel"
+                            :counter="10"
+                            maxlength="10"
                             label="شماره تماس  "
-                            type="number"
                             variant="outlined"
                             density="compact"
+                            :rules="[rules.required, rules.phone]"
                         />
                     </v-col>
 
@@ -147,6 +150,8 @@ const formData = reactive({
 
 const rules = {
     required: (value) => !!value || "Required.",
+    //this  is for phone number validation
+    phone: (v) => (v && /^[0-9]{10}$/.test(v)) || "شماره تماس باید ده عدد باشد "
 };
 
 const create = async () => {

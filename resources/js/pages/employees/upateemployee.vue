@@ -3,12 +3,46 @@
         <v-card class="w-full mx-auto" max-width="800">
             <!-- Header -->
             <v-card-title class="px-6 py-3 d-flex justify-space-between">
-                <h2>تغیر  کارمند</h2>
+                <h2>تغیر کارمند</h2>
             </v-card-title>
 
             <!-- Form -->
             <v-card-text>
                 <v-form ref="formRef">
+                    <!-- this is for image   -->
+                    <v-row>
+                        <v-col cols="12">
+                            <div class="image-upload-wrapper">
+                                <!-- Hidden file input -->
+                                <input
+                                    ref="fileInput"
+                                    type="file"
+                                    accept="image/*"
+                                    style="display: none"
+                                    @change="onImageChange"
+                                />
+
+                                <!-- Click area -->
+                                <div class="image-box" @click="triggerFile">
+                                    <v-img
+                                        v-if="imagePreview || formData.image"
+                                        :src="imagePreview || formData.image"
+                                        height="160"
+                                        width="100%"
+                                        cover
+                                        class="rounded-lg"
+                                    />
+
+                                    <div v-else class="placeholder">
+                                        <v-icon size="40"
+                                            >mdi-image-plus</v-icon
+                                        >
+                                        <p>Click to upload image</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </v-col>
+                    </v-row>
                     <v-row dense>
                         <v-col cols="6">
                             <v-text-field
@@ -46,14 +80,7 @@
                                 :rules="[rules.required]"
                             />
                         </v-col>
-                        <v-col cols="6">
-                            <v-file-input
-                                v-model="formData.image"
-                                label="عکس "
-                                type="image"
-                                density="compact"
-                            />
-                        </v-col>
+
                         <v-col cols="6">
                             <v-text-field
                                 v-model="formData.phone_number"
@@ -185,15 +212,20 @@
 </template>
 
 <script setup>
-import { reactive, ref, onMounted , watch } from "vue";
+import { reactive, ref, onMounted, watch } from "vue";
 import { useWareHouseRepository } from "../../repositories/WareHouseRepository";
 let WareHouseRepository = useWareHouseRepository();
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 
 const router = useRouter();
+const route = useRoute();
 const formRef = ref(null);
+const image = ref([]);
+const fileInput = ref(null);
+const imagePreview = ref(null);
 
 const formData = reactive({
+    id:"",
     name: "",
     father_name: "",
     image: "",
@@ -215,27 +247,116 @@ const formData = reactive({
 // Example account types, you can modify this
 const gendertypes = ["male", "female"];
 
-watch(
-    () => WareHouseRepository.employees,
-    (newemployees) => {
-        if (newemployees && !Array.isArray(newemployees)) {  // Add !Array check
-            Object.assign(formData, newemployees);
-        }
-    },
-    { immediate: true, deep: true }  // Add deep: true
-);
+const triggerFile = () => {
+    fileInput.value.click();
+};
+const onImageChange = (event) => {
+    const file = event.target.files[0];
 
+    if (file) {
+        image.value = [file]; // keep your existing logic for FormData
+        imagePreview.value = URL.createObjectURL(file);
+    }
+};
 const rules = {
     required: (value) => !!value || "Required.",
 };
 
-const updateemployee = async () => {  // Make async
-    const { valid } = await formRef.value?.validate();  // Async + safe ref
+watch(
+    () => WareHouseRepository.employee,
+    (newemployees) => {
+        if (newemployees && !Array.isArray(newemployees)) {
+            // Add !Array check
+            Object.assign(formData, newemployees);
+        }
+    },
+    { immediate: true, deep: true }, // Add deep: true
+);
+
+const updateemployee = async () => {
+    const { valid } = await formRef.value?.validate();
+
     if (valid) {
-        await WareHouseRepository.updateemployee(formData);  // Await
+        // create formdata
+        const data = new FormData();
+
+        // append all fields
+        data.append("name", formData.name);
+        data.append("father_name", formData.father_name);
+        data.append("last_name", formData.last_name);
+        data.append("tazkira_number", formData.tazkira_number);
+        data.append("phone_number", formData.phone_number);
+        data.append("whatsapp_number", formData.whatsapp_number);
+        data.append("gender", formData.gender);
+        data.append("shift_from", formData.shift_from);
+        data.append("shift_to", formData.shift_to);
+        data.append("salary_amount", formData.salary_amount);
+        data.append("salary_amount_per_day", formData.salary_amount_per_day);
+        data.append("job_type", formData.job_type);
+        data.append("entry_date", formData.entry_date);
+        data.append("leave_date", formData.leave_date);
+        data.append("work_days", formData.work_days);
+
+        // image
+        if (image.value.length > 0) {
+            data.append("image", image.value[0]);
+        }
+
+        await WareHouseRepository.updateemployee(route.params.id, data);
+
         router.push("/employees");
     }
 };
+onMounted(() => {
+    WareHouseRepository.fetchemployee(route.params.id);
+});
 // WareHouseRepository.fetchwarehouseForDropDowns();
 // WareHouseRepository.fetchProductTypesForDropDowns();
 </script>
+<style scoped>
+.custom-image-input {
+    border: 2px dashed #90caf9;
+    border-radius: 12px;
+    padding: 10px;
+    background: #f5faff;
+    transition: all 0.3s ease;
+}
+
+.custom-image-input:hover {
+    border-color: #1e88e5;
+    background: #e3f2fd;
+}
+
+.custom-image-input .v-field {
+    background: transparent;
+}
+
+.custom-image-input .v-chip {
+    background: #1e88e5 !important;
+    color: white !important;
+}
+.image-upload-wrapper {
+    cursor: pointer;
+}
+
+.image-box {
+    border: 2px dashed #90caf9;
+    border-radius: 12px;
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5faff;
+    transition: 0.3s;
+}
+
+.image-box:hover {
+    border-color: #1e88e5;
+    background: #e3f2fd;
+}
+
+.placeholder {
+    text-align: center;
+    color: #1e88e5;
+}
+</style>

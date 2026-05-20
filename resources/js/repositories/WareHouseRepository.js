@@ -16,6 +16,7 @@ export let useWareHouseRepository = defineStore("WareHouseRepository", {
             employees: [],
             employee: [],
             ProductTypesForDropDown: [], // ✅ IMPORTANT FIX
+            ProductForDropDown: [],
             warehouseForDropDown: [],
             accountForDropDown: [],
             customerForDropDown: [],
@@ -44,12 +45,24 @@ export let useWareHouseRepository = defineStore("WareHouseRepository", {
             try {
                 const response = await axios.get(`product-types`);
                 // Store in dropdown format { label, value }
-                this.ProductTypesForDropDown = response.data.items.map(
+                this.ProductTypesForDropDown = response.data.map(
                     (acc) => ({
                         label: acc.name, // display name
                         value: acc.id, // actual id
                     }),
                 );
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        async fetchproductForDropDowns() {
+            try {
+                const response = await axios.get(`products`);
+                // Store in dropdown format { label, value }
+                this.ProductForDropDown = response.data.map((acc) => ({
+                    label: acc.name, // display name
+                    value: acc.id, // actual id
+                }));
             } catch (error) {
                 console.error(error);
             }
@@ -245,7 +258,7 @@ export let useWareHouseRepository = defineStore("WareHouseRepository", {
                     `products?page=${page}&perPage=${itemsPerPage}`,
                 );
 
-                this.customers = response.data.items;
+                this.products = response.data;
                 this.page = page;
             } catch (error) {
                 console.error(error);
@@ -265,7 +278,7 @@ export let useWareHouseRepository = defineStore("WareHouseRepository", {
         },
 
         // ✅ Create
-        async Createproduct(formData) {
+        async createproduct(formData) {
             try {
                 await axios.post("products", formData);
 
@@ -395,12 +408,16 @@ export let useWareHouseRepository = defineStore("WareHouseRepository", {
         // this is for the sales
         async fetchsales({ page, itemsPerPage }) {
             this.loading = true;
+
             try {
                 const response = await axios.get(
                     `sales?page=${page}&perPage=${itemsPerPage}`,
                 );
 
-                this.sales = response.data.items;
+                console.log(response.data);
+
+                this.sales = response.data.data;
+                this.totalItems = response.data.total;
                 this.page = page;
             } catch (error) {
                 console.error(error);
@@ -494,6 +511,11 @@ export let useWareHouseRepository = defineStore("WareHouseRepository", {
         // ✅ Create
         async createemployees(formData) {
             try {
+                await axios.post("customers", formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                });
                 await axios.post("employees", formData);
 
                 this.createDialog = false;
@@ -510,7 +532,14 @@ export let useWareHouseRepository = defineStore("WareHouseRepository", {
         // ✅ Update
         async updateemployee(id, data) {
             try {
-                await axios.put(`employees/${id}`, data);
+
+                data.append("_method", "PUT");
+
+                 await axios.post(`employees/${id}`, data, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                });
 
                 this.updateDialog = false;
 

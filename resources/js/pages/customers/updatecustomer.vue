@@ -260,7 +260,7 @@ const formData = reactive({
     father_name: "",
     phone_number: "",
     tazkira_number: "",
-    image: "",
+    image: "    ",
     image_url: "",
     note: "",
 });

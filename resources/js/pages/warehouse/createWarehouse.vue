@@ -20,7 +20,6 @@
                 <v-card-text>
                     <v-form ref="formRef">
                         <v-row class="" dense>
-                          
                             <v-col cols="6">
                                 <v-text-field
                                     v-model="formData.name"
@@ -37,15 +36,18 @@
                                 label="اسم صاحب"
                                 :rules="[rules.required]"
                             />
-                            <v-text-field
-                                v-model="formData.owner_phone"
-                                type="tel"
-                                variant="outlined"
-                                density="compact"
-                                label="شماره صاحب"
-                                :rules="[rules.required]"
-                            />
                         </v-row>
+
+                        <v-text-field
+                            v-model="formData.owner_phone"
+                            type="tel"
+                            :counter="10"
+                            maxlength="10"
+                            variant="outlined"
+                            density="compact"
+                            label="شماره صاحب"
+                            :rules="[rules.required, rules.phone]"
+                        />
                         <v-textarea
                             v-model="formData.note"
                             variant="outlined"
@@ -65,17 +67,16 @@
 </template>
 
 <script setup>
-
 import { reactive, ref } from "vue";
 import { useWareHouseRepository } from "../../repositories/WareHouseRepository";
 let WareHouseRepository = useWareHouseRepository();
 const formRef = ref(null);
 
 const formData = reactive({
-  name: "", 
-  owner_name: "",
-  owner_phone:"",
-  note: ""
+    name: "",
+    owner_name: "",
+    owner_phone: "",
+    note: "",
 });
 
 // Example account types, you can modify this
@@ -83,11 +84,9 @@ const formData = reactive({
 const rules = {
     required: (value) => !!value || "Required.",
 
-    // ✅ this is for phone validation 
-    phone: (v) =>
-        /^\d{10}$/.test(v) || "Phone number must be exactly 10 digits",
+    // ✅ this is for phone validation
+    phone: (v) => (v && /^[0-9]{10}$/.test(v)) || "شماره تماس باید 10 عدد باشد",
 };
-
 
 const createwarehose = async () => {
     const isValid = formRef.value.validate();

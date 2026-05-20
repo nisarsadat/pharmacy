@@ -46,16 +46,18 @@
                         </v-row>
 
                         <v-row dense>
-                            <v-col cols="6">
-                                <v-text-field
-                                    v-model="formData.owener_phone"
-                                    variant="outlined"
-                                    density="compact"
-                                    label="شماره تماس مالک "
-                                    type="number"
-                                    :rules="[rules.required]"
-                                />
-                            </v-col>
+                    <v-col cols="6">
+                        <v-text-field
+                            v-model="formData.owener_phone"
+                            type="tel"
+                            :counter="10"
+                            maxlength="10"
+                            label="شماره تماس صاحب   "
+                            variant="outlined"
+                            density="compact"
+                            :rules="[rules.required, rules.phone]"
+                        />
+                       </v-col>
 
                             <v-col cols="6">
                                 <v-text-field
@@ -107,6 +109,8 @@ const accountTypes = ["Bank", "Cash", "Digital Wallet", "khan", "jan"];
 
 const rules = {
     required: (value) => !!value || "Required.",
+      // ✅ this is for phone validation
+    phone: (v) => (v && /^[0-9]{10}$/.test(v)) || "شماره تماس باید 10 عدد باشد",
 };
 
 const create = async () => {

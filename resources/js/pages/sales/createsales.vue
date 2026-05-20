@@ -3,7 +3,7 @@
         <v-card class="mx-auto">
             <!-- Header -->
             <v-card-title class="px-6 py-3 d-flex justify-space-between">
-                <h2>ایجاد فروشات </h2>
+                <h2>ایجاد فروشات</h2>
             </v-card-title>
 
             <!-- Form -->
@@ -43,17 +43,22 @@
                                 variant="outlined"
                                 density="compact"
                             />
-
-                            <!-- <v-col cols="6">
-                            <v-text-field
-                                v-model="formData.user_id"
-                                label="   "
-                                type="number"
+                        </v-col>
+                        <v-col cols="6">
+                            <v-select
+                                v-model="formData.warehouse_id"
+                                :items="
+                                    WareHouseRepository.warehouseForDropDown
+                                "
+                                label="  گدام "
+                                item-title="label"
+                                :rules="[rules.required]"
+                                item-value="value"
                                 variant="outlined"
                                 density="compact"
                             />
-                        </v-col> -->
-
+                        </v-col>
+                        <v-col cols="6">
                             <v-text-field
                                 v-model="formData.total_amount"
                                 label="مقدار مجموعی "
@@ -63,6 +68,7 @@
                                 :rules="[rules.required]"
                             />
                         </v-col>
+
                         <v-col cols="6">
                             <v-text-field
                                 v-model="formData.discount"
@@ -97,22 +103,88 @@
                                 density="compact"
                             />
                         </v-col>
-                        <v-col cols="6">
-                            <v-text-field
-                                v-model="formData.payment_status"
-                                label=" وضعیت پرداخت"
-                                variant="outlined"
-                                type="number"
-                                density="compact"
-                            />
-                        </v-col>
-                         <v-col cols="6">
-                            <v-text-field
-                                v-model="formData.items"
-                                label=" بخش "
-                                variant="outlined"
-                                density="compact"
-                            />
+
+                        <v-col cols="12">
+                            <v-card class="pa-4" elevation="1">
+                                <h3 class="mb-4">بخش فروشات</h3>
+
+                                <v-row
+                                    v-for="(item, index) in formData.items"
+                                    :key="index"
+                                    class="mb-2"
+                                >
+                                    <!-- Product ID -->
+                                    <v-col cols="3">
+                                        <v-select
+                                            v-model="item.product_id"
+                                            :items="
+                                                WareHouseRepository.ProductForDropDown
+                                            "
+                                            label="Product ID"
+                                            item-title="label"
+                                            :rules="[rules.required]"
+                                            item-value="value"
+                                            type="number"
+                                            variant="outlined"
+                                            density="compact"
+                                        />
+                                    </v-col>
+
+                                    <!-- Quantity -->
+                                    <v-col cols="3">
+                                        <v-text-field
+                                            v-model="item.quantity"
+                                            label="تعداد"
+                                            type="number"
+                                            variant="outlined"
+                                            density="compact"
+                                        />
+                                    </v-col>
+
+                                    <!-- Price -->
+                                    <v-col cols="3">
+                                        <v-text-field
+                                            v-model="item.price"
+                                            label="قیمت"
+                                            type="number"
+                                            variant="outlined"
+                                            density="compact"
+                                        />
+                                    </v-col>
+
+                                    <!-- Total -->
+                                    <v-col cols="2">
+                                        <v-text-field
+                                            v-model="item.total"
+                                            label="مجموع"
+                                            type="number"
+                                            variant="outlined"
+                                            density="compact"
+                                        />
+                                    </v-col>
+
+                                    <!-- Delete Button -->
+                                    <v-col cols="1" class="d-flex align-center">
+                                        <v-btn
+                                            icon
+                                            color="red"
+                                            variant="text"
+                                            @click="removeItem(index)"
+                                        >
+                                            <v-icon>mdi-delete</v-icon>
+                                        </v-btn>
+                                    </v-col>
+                                </v-row>
+
+                                <!-- Add Item Button -->
+                                <v-btn
+                                    color="primary"
+                                    variant="flat"
+                                    @click="addItem"
+                                >
+                                    افزودن بخش
+                                </v-btn>
+                            </v-card>
                         </v-col>
                     </v-row>
 
@@ -149,38 +221,46 @@ const formData = reactive({
     date: "",
     customer_id: "",
     account_id: "",
-    user_id: "",
+    warehouse_id: "",
     total_amount: "",
     discount: "",
     final_amount: "",
     paid_amount: "",
     due_amount: "",
-    payment_status: "",
-    items: [],
+
+    items: [
+        {
+            product_id: "",
+            quantity: "",
+            price: "",
+            total: "",
+        },
+    ],
 });
 
 // Example account types, you can modify this
 
-
 const rules = {
     required: (value) => !!value || "Required.",
+};
+
+const addItem = () => {
+    formData.items.push({
+        product_id: "",
+        quantity: "",
+        price: "",
+        total: "",
+    });
+};
+
+const removeItem = (index) => {
+    formData.items.splice(index, 1);
 };
 
 const createsales = async () => {
     const isValid = await formRef.value.validate();
 
     if (isValid) {
-
-        // ✅ FIX: convert simple value into required structure
-        formData.items = [
-            {
-                product_id: formData.items || 1,   // default or your value
-                quantity: 1,
-                price: formData.total_amount || 0,
-                total: formData.total_amount || 0,
-            }
-        ];
-
         await WareHouseRepository.createsales(formData);
 
         router.push("/sales");
@@ -188,4 +268,6 @@ const createsales = async () => {
 };
 WareHouseRepository.fetchaccountForDropDowns();
 WareHouseRepository.fetchcustomerForDropDowns();
+WareHouseRepository.fetchwarehouseForDropDowns();
+WareHouseRepository.fetchproductForDropDowns();
 </script>

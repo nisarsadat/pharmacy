@@ -107,13 +107,14 @@ const headers = [
     { title: "اسم", key: "name", sortable: false },
     { title: "قیمت اصلی", key: "main_price", sortable: false },
     { title: "قیمت فروش  ", key: "sale_price", sortable: false },
-    
-
-    { title: " گدام ", key: "warehouse", sortable: false },
-    { title: "آیدی نوعیت محصول", key: "product_type", sortable: false },
-    { title: "کود نمبر", key: "code", sortable: false },
-    { title: "هوشدار موجودی ", key: "main_stock_alert", sortable: false },
-    { title: "نوت", key: "note", sortable: false }, 
+    { title: "مقدار محصول", key: "product_quantity", sortable: false },
+    { title: "کارخانه محصول", key: "product_company", sortable: false },
+    { title: "تاریخ", key: "date", sortable: false },
+    { title: "تاریخ ختم", key: "expire_date", sortable: false },
+    { title: "تاریخ محصول", key: "product_date", sortable: false },
+    { title: "  آیدی گدام ", key: "warehouse_id", sortable: false },
+    { title: "آیدی نوعیت محصول", key: "product_type_id", sortable: false },
+    { title: "نوت", key: "note", sortable: false },
 
     {
         title: "هوشدار انقضای تاریخ ",
@@ -121,19 +122,14 @@ const headers = [
         sortable: false,
     },
     { title: "تاریخ", key: "date", sortable: false },
-    {
-        title: "مقدار محصول به کارتن",
-        key: "product_amount_carton",
-        sortable: false,
-    },
     { title: "مقدار محصول ", key: "product_amount", sortable: false },
+    {title: "عکس ها ", key: "image", sortable: false},
     { title: "action", key: "actions", sortable: false },
 ];
 
 const deleteItem = (id) => {
     WareHouseRepository.deleteproduct(id);
 };
-
 
 const fetchproductsdata = (options) => {
     const { page, itemsPerPage } = options;
