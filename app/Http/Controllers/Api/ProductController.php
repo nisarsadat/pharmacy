@@ -36,7 +36,12 @@ class ProductController extends Controller
         'data' => $product->load(['warehouse', 'productType', 'images']),
     ]);
 }
-
+public function show(Product $product)
+{
+    return response()->json([
+        'data' => $product->load(['warehouse', 'productType', 'images']),
+    ]);
+}
     public function update(UpdateProductRequest $request, Product $product)
     {
         $product->update($request->validated());
