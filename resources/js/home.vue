@@ -1,17 +1,15 @@
 <template>
     <v-app>
-        <v-app-bar title="App bar">
+        <v-app-bar>
             <v-btn
                 color="red"
                 variant="tonal"
                 @click="logout"
                 icon="mdi-logout"
-            ></v-btn
-        ></v-app-bar>
+            ></v-btn>
+        </v-app-bar>
 
-        <v-navigation-drawer width="240">
-            <SidebarMenu />
-        </v-navigation-drawer>
+        <SidebarMenu />
 
         <v-main>
             <router-view></router-view>
