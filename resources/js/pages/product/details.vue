@@ -229,23 +229,7 @@
                     </v-card>
                 </v-col>
 
-                <!-- Images List -->
-                <v-col cols="12" v-if="product.images && product.images.length">
-                    <v-card class="main-card pa-5" elevation="0" rounded="xl">
-                        <SectionTitle icon="mdi-image-multiple" title="همه تصاویر محصول" />
-
-                        <div class="thumb-grid">
-                            <v-img
-                                v-for="image in product.images"
-                                :key="image.id || image.image"
-                                :src="getImageUrl(image.image)"
-                                height="130"
-                                cover
-                                class="thumb-img"
-                            />
-                        </div>
-                    </v-card>
-                </v-col>
+               
             </v-row>
         </template>
     </v-container>

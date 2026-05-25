@@ -1,6 +1,6 @@
 <template>
     <v-container class="product-edit-page" fluid dir="rtl">
-        <v-card class="product-card mx-auto" max-width="1000" elevation="0">
+        <v-card class="product-card mx-auto" max-width="1050" elevation="0">
             <!-- Header -->
             <div class="header-section">
                 <div>
@@ -8,7 +8,7 @@
                         ویرایش محصول
                     </h2>
                     <p class="text-body-2 text-medium-emphasis mb-0">
-                        معلومات محصول را تغییر دهید و دوباره ثبت کنید.
+                        معلومات محصول، گدام، نوعیت، تاریخ‌ها و تصویر جدید را تغییر دهید.
                     </p>
                 </div>
 
@@ -36,9 +36,116 @@
             <v-card-text v-else class="pa-6">
                 <v-form ref="formRef" @submit.prevent="updateProduct">
                     <v-row dense>
-                        <!-- Main Info -->
+                        <!-- Images -->
                         <v-col cols="12">
                             <div class="section-title">
+                                <v-icon size="20">mdi-image-multiple</v-icon>
+                                تصاویر محصول
+                            </div>
+
+                            <div class="images-panel">
+                                <!-- Existing Images -->
+                                <div class="image-column">
+                                    <div class="image-column-title">
+                                        تصاویر فعلی
+                                    </div>
+
+                                    <div v-if="existingImages.length" class="existing-grid">
+                                        <v-img
+                                            v-for="image in existingImages"
+                                            :key="image.id || image.image"
+                                            :src="getImageUrl(image.image)"
+                                            height="120"
+                                            cover
+                                            class="existing-img"
+                                        />
+                                    </div>
+
+                                    <div v-else class="no-existing-image">
+                                        <v-icon size="44" color="grey-lighten-1">
+                                            mdi-image-off-outline
+                                        </v-icon>
+                                        <span>برای این محصول عکس ثبت نشده است</span>
+                                    </div>
+                                </div>
+
+                                <!-- New Image -->
+                                <div class="image-column">
+                                    <div class="image-column-title">
+                                        افزودن تصویر جدید
+                                    </div>
+
+                                    <div
+                                        class="upload-box"
+                                        :class="{ 'upload-box-error': imageError }"
+                                        @click="triggerFile"
+                                    >
+                                        <input
+                                            ref="fileInput"
+                                            type="file"
+                                            accept="image/*"
+                                            class="d-none"
+                                            @change="onImageChange"
+                                        />
+
+                                        <template v-if="newImagePreview">
+                                            <div class="new-preview">
+                                                <v-img
+                                                    :src="newImagePreview"
+                                                    height="170"
+                                                    cover
+                                                    class="rounded-lg"
+                                                />
+
+                                                <v-btn
+                                                    icon="mdi-close"
+                                                    size="x-small"
+                                                    color="red"
+                                                    class="remove-image-btn"
+                                                    @click.stop="removeNewImage"
+                                                />
+                                            </div>
+                                        </template>
+
+                                        <template v-else>
+                                            <div class="placeholder">
+                                                <v-icon size="48" color="primary">
+                                                    mdi-image-plus
+                                                </v-icon>
+
+                                                <div class="font-weight-bold mt-2">
+                                                    برای انتخاب عکس جدید کلیک کنید
+                                                </div>
+
+                                                <div class="text-body-2 text-medium-emphasis mt-1">
+                                                    در حالت فعلی فقط یک عکس جدید اضافه می‌شود
+                                                </div>
+
+                                                <v-btn
+                                                    color="primary"
+                                                    class="mt-4"
+                                                    prepend-icon="mdi-upload"
+                                                    @click.stop="triggerFile"
+                                                >
+                                                    انتخاب تصویر
+                                                </v-btn>
+                                            </div>
+                                        </template>
+                                    </div>
+
+                                    <div
+                                        v-if="imageError"
+                                        class="text-error text-caption mt-2"
+                                    >
+                                        {{ imageError }}
+                                    </div>
+                                </div>
+                            </div>
+                        </v-col>
+
+                        <!-- Product Info -->
+                        <v-col cols="12">
+                            <div class="section-title mt-5">
                                 <v-icon size="20">mdi-package-variant</v-icon>
                                 معلومات اصلی محصول
                             </div>
@@ -57,52 +164,12 @@
 
                         <v-col cols="12" md="6">
                             <v-text-field
-                                v-model="formData.code"
-                                label="کود نمبر"
-                                type="number"
+                                v-model="formData.product_company"
+                                label="شرکت / کارخانه محصول"
                                 variant="outlined"
                                 density="compact"
-                                prepend-inner-icon="mdi-barcode"
-                                :rules="[rules.required]"
+                                prepend-inner-icon="mdi-factory"
                             />
-                        </v-col>
-
-                        <v-col cols="12" md="6">
-                            <v-autocomplete
-                                v-model="formData.product_type_id"
-                                label="نوعیت محصول"
-                                :items="WareHouseRepository.ProductTypesForDropDown"
-                                item-title="label"
-                                item-value="value"
-                                clearable
-                                variant="outlined"
-                                density="compact"
-                                prepend-inner-icon="mdi-shape"
-                                :rules="[rules.required]"
-                            />
-                        </v-col>
-
-                        <v-col cols="12" md="6">
-                            <v-autocomplete
-                                v-model="formData.warehouse_id"
-                                label="گدام"
-                                :items="WareHouseRepository.warehouseForDropDown"
-                                item-title="label"
-                                item-value="value"
-                                clearable
-                                variant="outlined"
-                                density="compact"
-                                prepend-inner-icon="mdi-warehouse"
-                                :rules="[rules.required]"
-                            />
-                        </v-col>
-
-                        <!-- Prices -->
-                        <v-col cols="12">
-                            <div class="section-title mt-4">
-                                <v-icon size="20">mdi-cash-multiple</v-icon>
-                                قیمت و موجودی
-                            </div>
                         </v-col>
 
                         <v-col cols="12" md="6">
@@ -129,33 +196,9 @@
                             />
                         </v-col>
 
-                        <v-col cols="12" md="4">
+                        <v-col cols="12" md="6">
                             <v-text-field
-                                v-model="formData.main_stock_alert"
-                                label="هوشدار موجودی"
-                                type="number"
-                                variant="outlined"
-                                density="compact"
-                                prepend-inner-icon="mdi-alert-circle"
-                                :rules="[rules.required, rules.positiveNumber]"
-                            />
-                        </v-col>
-
-                        <v-col cols="12" md="4">
-                            <v-text-field
-                                v-model="formData.product_amount_carton"
-                                label="مقدار در کارتن"
-                                type="number"
-                                variant="outlined"
-                                density="compact"
-                                prepend-inner-icon="mdi-package"
-                                :rules="[rules.required, rules.positiveNumber]"
-                            />
-                        </v-col>
-
-                        <v-col cols="12" md="4">
-                            <v-text-field
-                                v-model="formData.product_amount"
+                                v-model="formData.product_quantity"
                                 label="مقدار محصول"
                                 type="number"
                                 variant="outlined"
@@ -165,18 +208,46 @@
                             />
                         </v-col>
 
+                        <v-col cols="12" md="6">
+                            <v-select
+                                v-model="formData.product_type_id"
+                                label="نوعیت محصول"
+                                :items="WareHouseRepository.ProductTypesForDropDown"
+                                item-title="label"
+                                item-value="value"
+                                variant="outlined"
+                                density="compact"
+                                prepend-inner-icon="mdi-shape"
+                                :rules="[rules.required]"
+                            />
+                        </v-col>
+
+                        <v-col cols="12" md="6">
+                            <v-autocomplete
+                                v-model="formData.warehouse_id"
+                                label="گدام"
+                                :items="WareHouseRepository.warehouseForDropDown"
+                                item-title="label"
+                                item-value="value"
+                                variant="outlined"
+                                density="compact"
+                                prepend-inner-icon="mdi-warehouse"
+                                :rules="[rules.required]"
+                            />
+                        </v-col>
+
                         <!-- Dates -->
                         <v-col cols="12">
-                            <div class="section-title mt-4">
+                            <div class="section-title mt-5">
                                 <v-icon size="20">mdi-calendar</v-icon>
                                 تاریخ‌ها
                             </div>
                         </v-col>
 
-                        <v-col cols="12" md="6">
+                        <v-col cols="12" md="4">
                             <v-text-field
                                 v-model="formData.date"
-                                label="تاریخ"
+                                label="تاریخ ثبت"
                                 type="date"
                                 variant="outlined"
                                 density="compact"
@@ -184,22 +255,24 @@
                             />
                         </v-col>
 
-                        <v-col cols="12" md="6">
+                        <v-col cols="12" md="4">
                             <v-text-field
-                                v-model="formData.expire_date_alert"
-                                label="هوشدار تاریخ انقضا"
+                                v-model="formData.produced_date"
+                                label="تاریخ تولید"
                                 type="date"
                                 variant="outlined"
                                 density="compact"
                             />
                         </v-col>
 
-                        <!-- Note -->
-                        <v-col cols="12">
-                            <div class="section-title mt-4">
-                                <v-icon size="20">mdi-note-text</v-icon>
-                                نوت
-                            </div>
+                        <v-col cols="12" md="4">
+                            <v-text-field
+                                v-model="formData.expire_date"
+                                label="تاریخ انقضا"
+                                type="date"
+                                variant="outlined"
+                                density="compact"
+                            />
                         </v-col>
 
                         <v-col cols="12">
@@ -209,7 +282,7 @@
                                 variant="outlined"
                                 density="compact"
                                 rows="3"
-                                prepend-inner-icon="mdi-note"
+                                prepend-inner-icon="mdi-note-text"
                             />
                         </v-col>
                     </v-row>
@@ -259,7 +332,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, onMounted } from "vue";
+import { reactive, ref, onMounted, onBeforeUnmount } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useWareHouseRepository } from "../../repositories/WareHouseRepository";
 
@@ -268,9 +341,16 @@ const route = useRoute();
 const WareHouseRepository = useWareHouseRepository();
 
 const formRef = ref(null);
+const fileInput = ref(null);
+
 const loading = ref(false);
 const pageLoading = ref(true);
 const serverError = ref("");
+const imageError = ref("");
+
+const existingImages = ref([]);
+const newImage = ref(null);
+const newImagePreview = ref("");
 
 const snackbar = reactive({
     show: false,
@@ -279,17 +359,16 @@ const snackbar = reactive({
 });
 
 const formData = reactive({
-    warehouse_id: "",
-    product_type_id: "",
-    code: "",
     name: "",
     main_price: "",
     sale_price: "",
-    main_stock_alert: "",
-    expire_date_alert: "",
+    product_quantity: "",
+    product_company: "",
     date: "",
-    product_amount_carton: "",
-    product_amount: "",
+    expire_date: "",
+    produced_date: "",
+    warehouse_id: "",
+    product_type_id: "",
     note: "",
 });
 
@@ -310,23 +389,101 @@ const showMessage = (text, color = "success") => {
     snackbar.show = true;
 };
 
+const getImageUrl = (path) => {
+    if (!path) return "";
+
+    if (path.startsWith("http")) {
+        return path;
+    }
+
+    const cleanPath = path.startsWith("/") ? path.slice(1) : path;
+
+    return `http://127.0.0.1:8000/storage/${cleanPath}`;
+};
+
+const triggerFile = () => {
+    fileInput.value?.click();
+};
+
+const revokeNewPreview = () => {
+    if (newImagePreview.value) {
+        URL.revokeObjectURL(newImagePreview.value);
+    }
+};
+
+const onImageChange = (event) => {
+    imageError.value = "";
+
+    const file = event.target.files?.[0];
+
+    if (!file) {
+        return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+        imageError.value = "لطفاً فقط فایل عکس انتخاب کنید.";
+        event.target.value = "";
+        return;
+    }
+
+    revokeNewPreview();
+
+    newImage.value = file;
+    newImagePreview.value = URL.createObjectURL(file);
+
+    event.target.value = "";
+};
+
+const removeNewImage = () => {
+    revokeNewPreview();
+
+    newImage.value = null;
+    newImagePreview.value = "";
+    imageError.value = "";
+};
+
 const fillForm = (product) => {
-    formData.warehouse_id = product?.warehouse_id ?? "";
-    formData.product_type_id = product?.product_type_id ?? "";
-    formData.code = product?.code ?? "";
     formData.name = product?.name ?? "";
     formData.main_price = product?.main_price ?? "";
     formData.sale_price = product?.sale_price ?? "";
-    formData.main_stock_alert = product?.main_stock_alert ?? "";
-    formData.expire_date_alert = product?.expire_date_alert ?? "";
+    formData.product_quantity = product?.product_quantity ?? "";
+    formData.product_company = product?.product_company ?? "";
     formData.date = product?.date ?? "";
-    formData.product_amount_carton = product?.product_amount_carton ?? "";
-    formData.product_amount = product?.product_amount ?? "";
+    formData.expire_date = product?.expire_date ?? "";
+    formData.produced_date = product?.produced_date ?? "";
+    formData.warehouse_id = product?.warehouse_id ?? "";
+    formData.product_type_id = product?.product_type_id ?? "";
     formData.note = product?.note ?? "";
+
+    existingImages.value = Array.isArray(product?.images) ? product.images : [];
+};
+
+const buildFormData = () => {
+    const data = new FormData();
+
+    data.append("_method", "PUT");
+    data.append("name", formData.name);
+    data.append("main_price", formData.main_price);
+    data.append("sale_price", formData.sale_price);
+    data.append("product_quantity", formData.product_quantity);
+    data.append("product_company", formData.product_company || "");
+    data.append("date", formData.date);
+    data.append("expire_date", formData.expire_date || "");
+    data.append("produced_date", formData.produced_date || "");
+    data.append("warehouse_id", formData.warehouse_id);
+    data.append("product_type_id", formData.product_type_id);
+    data.append("note", formData.note || "");
+
+    if (newImage.value) {
+        data.append("image", newImage.value);
+    }
+
+    return data;
 };
 
 const updateProduct = async () => {
     serverError.value = "";
+    imageError.value = "";
 
     const result = await formRef.value?.validate();
 
@@ -338,20 +495,9 @@ const updateProduct = async () => {
     loading.value = true;
 
     try {
-        await WareHouseRepository.updateproduct(route.params.id, {
-            warehouse_id: formData.warehouse_id,
-            product_type_id: formData.product_type_id,
-            code: formData.code,
-            name: formData.name,
-            main_price: formData.main_price,
-            sale_price: formData.sale_price,
-            main_stock_alert: formData.main_stock_alert,
-            expire_date_alert: formData.expire_date_alert,
-            date: formData.date,
-            product_amount_carton: formData.product_amount_carton,
-            product_amount: formData.product_amount,
-            note: formData.note,
-        });
+        const data = buildFormData();
+
+        await WareHouseRepository.updateproduct(route.params.id, data);
 
         showMessage("محصول موفقانه ویرایش شد.");
 
@@ -389,6 +535,10 @@ onMounted(async () => {
         pageLoading.value = false;
     }
 });
+
+onBeforeUnmount(() => {
+    revokeNewPreview();
+});
 </script>
 
 <style scoped>
@@ -398,30 +548,29 @@ onMounted(async () => {
     background:
         radial-gradient(
             circle at top right,
-            rgba(103, 58, 183, 0.12),
+            rgba(103, 58, 183, 0.14),
             transparent 32%
         ),
         linear-gradient(180deg, #fafafa, #f5f7fb);
 }
 
 .product-card {
-    border-radius: 24px;
+    border-radius: 26px;
     overflow: hidden;
     border: 1px solid rgba(120, 120, 120, 0.16);
+    background: rgba(255, 255, 255, 0.96);
 }
 
 .header-section {
-    padding: 22px 24px;
+    padding: 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 16px;
     flex-wrap: wrap;
-    background: linear-gradient(
-        135deg,
-        rgba(103, 58, 183, 0.08),
-        rgba(33, 150, 243, 0.06)
-    );
+    background:
+        radial-gradient(circle at left top, rgba(103, 58, 183, 0.14), transparent 34%),
+        linear-gradient(135deg, rgba(103, 58, 183, 0.08), rgba(33, 150, 243, 0.06));
 }
 
 .section-title {
@@ -429,16 +578,102 @@ onMounted(async () => {
     align-items: center;
     gap: 8px;
     margin-bottom: 12px;
-    font-weight: 700;
+    font-weight: 800;
     color: #4527a0;
 }
 
 .loading-box {
-    min-height: 360px;
+    min-height: 390px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
+}
+
+.images-panel {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 18px;
+    padding: 16px;
+    border-radius: 22px;
+    border: 1px solid rgba(103, 58, 183, 0.12);
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(250, 247, 255, 0.95));
+}
+
+.image-column {
+    min-width: 0;
+}
+
+.image-column-title {
+    font-size: 13px;
+    font-weight: 800;
+    color: #5e35b1;
+    margin-bottom: 10px;
+}
+
+.existing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
+    gap: 12px;
+}
+
+.existing-img {
+    border-radius: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: #f3f4f8;
+}
+
+.no-existing-image {
+    min-height: 170px;
+    border: 2px dashed #d6d6d6;
+    border-radius: 18px;
+    background: #fafafa;
+    color: #9e9e9e;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.upload-box {
+    min-height: 170px;
+    border: 2px dashed #b39ddb;
+    border-radius: 18px;
+    background: #fbfaff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.upload-box:hover {
+    border-color: #673ab7;
+    background: #f7f2ff;
+}
+
+.upload-box-error {
+    border-color: #f44336;
+    background: #fff5f5;
+}
+
+.placeholder {
+    text-align: center;
+}
+
+.new-preview {
+    width: 100%;
+    position: relative;
+}
+
+.remove-image-btn {
+    position: absolute;
+    top: 8px;
+    left: 8px;
 }
 
 .actions {
@@ -446,5 +681,15 @@ onMounted(async () => {
     display: flex;
     justify-content: flex-end;
     gap: 12px;
+}
+
+@media (max-width: 800px) {
+    .product-edit-page {
+        padding: 16px;
+    }
+
+    .images-panel {
+        grid-template-columns: 1fr;
+    }
 }
 </style>

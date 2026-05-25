@@ -271,6 +271,7 @@ export let useWareHouseRepository = defineStore("WareHouseRepository", {
             try {
                 const response = await axios.get(`products/${id}`);
                 this.product = response.data.data || response.data;
+                 return this.product;
             } catch (error) {
                 console.error(error);
             }
