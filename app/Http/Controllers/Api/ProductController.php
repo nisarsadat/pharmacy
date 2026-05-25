@@ -17,26 +17,25 @@ class ProductController extends Controller
     }
 
     public function store(StoreProductRequest $request)
-    {
-        $product = Product::create($request->validated());
+{
+    $product = Product::create($request->validated());
 
-        // ✅ آپلود عکس
-        if ($request->hasFile('image')) {
-
-            $file = $request->file('image');
+    if ($request->hasFile('images')) {
+        foreach ($request->file('images') as $file) {
             $path = $file->store('products', 'public');
 
             ProductImage::create([
                 'product_id' => $product->id,
-                'image' => $path
+                'image' => $path,
             ]);
         }
-
-        return response()->json([
-            'message' => 'Product created',
-            'data' => $product->load('images')
-        ]);
     }
+
+    return response()->json([
+        'message' => 'Product created',
+        'data' => $product->load(['warehouse', 'productType', 'images']),
+    ]);
+}
 
     public function update(UpdateProductRequest $request, Product $product)
     {

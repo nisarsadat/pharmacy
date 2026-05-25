@@ -53,6 +53,7 @@ import Createemployee from "./pages/employees/createemployee.vue";
 import updateemployee from "./pages/employees/upateemployee.vue";
 
 import attendancesIndex from "./pages/attendances/attendancesIndex.vue";
+import Details from "./pages/product/details.vue";
 
 // =========================================
 // ROUTES
@@ -209,168 +210,179 @@ const routes = [
                     subtitle: "مدیریت محصول",
                 },
             },
-
             {
-                path: "products/create",
-                name: "products.create",
+                path: "/products/:id",
+                name: "products.details",
 
-                component: Createproduct,
+            component: Details,
 
-                meta: {
-                    title: "ساختن محصول",
-                    subtitle: "ایجاد محصول جدید",
-                },
+            meta: {
+                title: "محصول",
+                subtitle: "جزییات محصول",
+            },
             },
 
-            {
-                path: "products/:id/edit",
-                name: "products.edit",
+    {
+        path: "products/create",
+        name: "products.create",
 
-                component: Updateproduct,
+        component: Createproduct,
 
-                props: true,
+        meta: {
+            title: "ساختن محصول",
+            subtitle: "ایجاد محصول جدید",
+        },
+    },
 
-                meta: {
-                    title: "ویرایش محصول",
-                    subtitle: "اپدیت محصول",
-                },
-            },
+    {
+        path: "products/:id/edit",
+        name: "products.edit",
 
-            // =================================
-            // CUSTOMERS
-            // =================================
+        component: Updateproduct,
 
-            {
-                path: "customers",
-                name: "customers",
+        props: true,
 
-                component: CustomerIndex,
+        meta: {
+            title: "ویرایش محصول",
+            subtitle: "اپدیت محصول",
+        },
+    },
 
-                meta: {
-                    title: "مشتری",
-                    subtitle: "مدیریت مشتری",
-                },
-            },
+    // =================================
+    // CUSTOMERS
+    // =================================
 
-            {
-                path: "customers/create",
-                name: "customers.create",
+    {
+        path: "customers",
+        name: "customers",
 
-                component: Createcustomer,
+        component: CustomerIndex,
 
-                meta: {
-                    title: "مشتری ایجاد",
-                    subtitle: "مدیریت مشتری",
-                },
-            },
+        meta: {
+            title: "مشتری",
+            subtitle: "مدیریت مشتری",
+        },
+    },
 
-            {
-                path: "customers/:id/edit",
-                name: "customers.edit",
+    {
+        path: "customers/create",
+        name: "customers.create",
 
-                component: Updatecustomer,
+        component: Createcustomer,
 
-                meta: {
-                    title: "تغیر مشتری",
-                    subtitle: "مدیریت تغیر مشتری",
-                },
-            },
+        meta: {
+            title: "مشتری ایجاد",
+            subtitle: "مدیریت مشتری",
+        },
+    },
 
-            // =================================
-            // SALES
-            // =================================
+    {
+        path: "customers/:id/edit",
+        name: "customers.edit",
 
-            {
-                path: "sales",
-                name: "sales",
+        component: Updatecustomer,
 
-                component: SalesIndex,
+        meta: {
+            title: "تغیر مشتری",
+            subtitle: "مدیریت تغیر مشتری",
+        },
+    },
 
-                meta: {
-                    title: "فروشات",
-                    subtitle: "مدیریت فروشات",
-                },
-            },
+    // =================================
+    // SALES
+    // =================================
 
-            {
-                path: "sales/create",
-                name: "createsales",
+    {
+        path: "sales",
+        name: "sales",
 
-                component: Createsales,
+        component: SalesIndex,
 
-                meta: {
-                    title: "ایجاد فروش",
-                    subtitle: "مدیریت ایجاد فروش",
-                },
-            },
+        meta: {
+            title: "فروشات",
+            subtitle: "مدیریت فروشات",
+        },
+    },
 
-            // =================================
-            // EMPLOYEES
-            // =================================
+    {
+        path: "sales/create",
+        name: "createsales",
 
-            {
-                path: "employees",
-                name: "employees",
+        component: Createsales,
 
-                component: employeeIndex,
+        meta: {
+            title: "ایجاد فروش",
+            subtitle: "مدیریت ایجاد فروش",
+        },
+    },
 
-                meta: {
-                    title: "کارمند",
-                    subtitle: "مدیریت کارمند",
-                },
-            },
+    // =================================
+    // EMPLOYEES
+    // =================================
 
-            {
-                path: "employees/create",
-                name: "employees.create",
+    {
+        path: "employees",
+        name: "employees",
 
-                component: Createemployee,
+        component: employeeIndex,
 
-                meta: {
-                    title: "ایجاد کارمند",
-                    subtitle: "مدیریت ایجاد کارمند",
-                },
-            },
+        meta: {
+            title: "کارمند",
+            subtitle: "مدیریت کارمند",
+        },
+    },
 
-            {
-                path: "employees/:id/edit",
-                name: "employees.edit",
+    {
+        path: "employees/create",
+        name: "employees.create",
 
-                component: updateemployee,
+        component: Createemployee,
 
-                meta: {
-                    title: "تغیر کارمند",
-                    subtitle: "مدیریت تغیر کارمند",
-                },
-            },
+        meta: {
+            title: "ایجاد کارمند",
+            subtitle: "مدیریت ایجاد کارمند",
+        },
+    },
 
-            // =================================
-            // ATTENDANCES
-            // =================================
+    {
+        path: "employees/:id/edit",
+        name: "employees.edit",
 
-            {
-                path: "attendances",
-                name: "attendances",
+        component: updateemployee,
 
-                component: attendancesIndex,
+        meta: {
+            title: "تغیر کارمند",
+            subtitle: "مدیریت تغیر کارمند",
+        },
+    },
 
-                meta: {
-                    title: "حاضری",
-                    subtitle: "مدیریت حاضری",
-                },
-            },
-            {
-                path: "users",
-                name: "users",
+    // =================================
+    // ATTENDANCES
+    // =================================
 
-                component: UsersIndex,
+    {
+        path: "attendances",
+        name: "attendances",
 
-                meta: {
-                    title: "کاربران",
-                    subtitle: "مدیریت کاربران",
-                },
-            },
-        ],
+        component: attendancesIndex,
+
+        meta: {
+            title: "حاضری",
+            subtitle: "مدیریت حاضری",
+        },
+    },
+    {
+        path: "users",
+        name: "users",
+
+        component: UsersIndex,
+
+        meta: {
+            title: "کاربران",
+            subtitle: "مدیریت کاربران",
+        },
+    },
+],
     },
 ];
 

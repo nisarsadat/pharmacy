@@ -2,7 +2,6 @@
 
 import { defineStore } from "pinia";
 import axios from "@/plugins/axios";
-import Createproduct from "../pages/product/createproduct.vue";
 
 export let useWareHouseRepository = defineStore("WareHouseRepository", {
     state() {
@@ -271,7 +270,7 @@ export let useWareHouseRepository = defineStore("WareHouseRepository", {
         async fetchproduct(id) {
             try {
                 const response = await axios.get(`products/${id}`);
-                this.product = response.data.data;
+                this.product = response.data.data || response.data;
             } catch (error) {
                 console.error(error);
             }
@@ -280,7 +279,11 @@ export let useWareHouseRepository = defineStore("WareHouseRepository", {
         // ✅ Create
         async createproduct(formData) {
             try {
-                await axios.post("products", formData);
+                await axios.post("products", formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                });
 
                 this.createDialog = false;
 
@@ -290,6 +293,7 @@ export let useWareHouseRepository = defineStore("WareHouseRepository", {
                 });
             } catch (error) {
                 console.error(error);
+                throw error;
             }
         },
 
@@ -535,7 +539,7 @@ export let useWareHouseRepository = defineStore("WareHouseRepository", {
 
                 data.append("_method", "PUT");
 
-                 await axios.post(`employees/${id}`, data, {
+                await axios.post(`employees/${id}`, data, {
                     headers: {
                         "Content-Type": "multipart/form-data",
                     },
