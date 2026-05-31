@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\Account;
 use Illuminate\Http\Request;
 use App\Http\Resources\AccountResource;
@@ -10,9 +11,6 @@ use App\Http\Requests\UpdateAccountRequest;
 
 class AccountController extends Controller
 {
-    /**
-     * Display a paginated list of accounts
-     */
     public function index(Request $request)
     {
         $perPage = (int) $request->get('per_page', 10);
@@ -32,9 +30,6 @@ class AccountController extends Controller
         ]);
     }
 
-    /**
-     * Store a new account
-     */
     public function store(StoreAccountRequest $request)
     {
         $account = Account::create($request->validated());
@@ -42,17 +37,11 @@ class AccountController extends Controller
         return new AccountResource($account);
     }
 
-    /**
-     * Display a single account
-     */
     public function show(Account $account)
     {
         return new AccountResource($account);
     }
 
-    /**
-     * Update an account
-     */
     public function update(UpdateAccountRequest $request, Account $account)
     {
         $account->update($request->validated());
@@ -60,9 +49,6 @@ class AccountController extends Controller
         return new AccountResource($account);
     }
 
-    /**
-     * Delete an account
-     */
     public function destroy(Account $account)
     {
         $account->delete();

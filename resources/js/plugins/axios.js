@@ -1,19 +1,28 @@
-// utils/axios.js  (or wherever you placed it)
+// src/utils/axios.js
 
 import axios from "axios";
 import { toast } from "vue3-toastify";
 import router from "@/router";
 
-// ✅ base config
-axios.defaults.baseURL = "/api";
-axios.defaults.headers.common["Accept"] = "application/json";
-axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
-axios.defaults.withCredentials = true;
+// ===================================
+// BASE CONFIG
+// ===================================
 
-// ✅ request interceptor (token)
-axios.interceptors.request.use(
+const api = axios.create({
+    baseURL: "/api",
+    headers: {
+        Accept: "application/json",
+        "X-Requested-With": "XMLHttpRequest",
+    },
+});
+
+// ===================================
+// REQUEST INTERCEPTOR
+// ===================================
+
+api.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem("token");
+        const token = sessionStorage.getItem("token");
 
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
@@ -24,33 +33,45 @@ axios.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
-// ✅ response interceptor (errors)
-axios.interceptors.response.use(
+// ===================================
+// RESPONSE INTERCEPTOR
+// ===================================
+
+api.interceptors.response.use(
     (response) => response,
+
     async (error) => {
         const status = error?.response?.status;
 
-        const msg =
+        const message =
             error?.response?.data?.message ||
-            error?.response?.data?.error ||
-            "Server error, try again.";
+            "Something went wrong";
 
+        // =========================
+        // UNAUTHORIZED
+        // =========================
         if (status === 401) {
-            localStorage.removeItem("token");
-            localStorage.removeItem("user");
+            sessionStorage.removeItem("token");
+            sessionStorage.removeItem("user");
 
             if (router.currentRoute.value.name !== "auth.login") {
-                toast.error("Session expired, login again.");
-                await router.push({ name: "auth.login" });
+                toast.error("Session expired");
+
+                await router.push({
+                    name: "auth.login",
+                });
             }
         }
 
+        // =========================
+        // SHOW ERROR
+        // =========================
         if (status !== 422) {
-            toast.error(msg);
+            toast.error(message);
         }
 
         return Promise.reject(error);
     }
 );
 
-export default axios;
+export default api;

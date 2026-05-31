@@ -8,7 +8,7 @@
         <template v-slot:default="{ isActive }">
             <v-card class="w-full">
                 <v-card-title class="px-6 py-1 d-flex justify-space-between">
-                    <h2>ساختن حساب</h2>
+                    <h2>account</h2>
                     <v-btn
                         variant="text"
                         @click="isActive.value = false"
@@ -22,21 +22,19 @@
                         <v-row class="" dense>
                             <v-col cols="6">
                                 <v-text-field
+                                    v-model="formData.date"
+                                    label="date"
+                                    type="date"
+                                    variant="outlined"
+                                    density="compact"
+                                />
+                            </v-col>
+                            <v-col cols="6">
+                                <v-text-field
                                     v-model="formData.name"
                                     variant="outlined"
                                     density="compact"
-                                    label="نام*"
-                                    :rules="[rules.required]"
-                                />
-                            </v-col>
-
-                            <v-col cols="6">
-                                <v-text-field
-                                    v-model="formData.price"
-                                    variant="outlined"
-                                    density="compact"
-                                    label="مقدار*"
-                                    type="number"
+                                    label="name"
                                     :rules="[rules.required]"
                                 />
                             </v-col>
@@ -45,21 +43,20 @@
                         <v-row dense>
                             <v-col cols="6">
                                 <v-text-field
-                                    v-model="formData.date"
+                                    v-model="formData.price"
                                     variant="outlined"
                                     density="compact"
-                                    label="تاریخ"
-                                    type="date"
+                                    label="price"
+                                    type="number"
                                     :rules="[rules.required]"
                                 />
                             </v-col>
 
                             <v-col cols="6">
-                                <v-select
+                                <v-text-field
                                     v-model="formData.account_type"
-                                    :items="accountTypes"
-                                    label="نوعیت حساب"
-                                    :rules="[rules.required]"
+                                    label="account type"
+                                    type="number"
                                     variant="outlined"
                                     density="compact"
                                 />
@@ -74,7 +71,7 @@
                     </v-form>
                 </v-card-text>
                 <v-card-actions class="px-6 pb-6">
-                    <v-btn color="light-blue-darken-1" @click="createAccount"
+                    <v-btn color="light-blue-darken-1" @click="create"
                         >ثبت کردن
                     </v-btn>
                 </v-card-actions>
@@ -92,20 +89,17 @@ const formRef = ref(null);
 
 const formData = reactive({
     name: "",
-    price: "",
     date: "",
-    note: "",
     account_type: "",
+    price: "",
+    note: "",
 });
-
-// Example account types, you can modify this
-const accountTypes = ["Bank", "Cash", "Digital Wallet", "khan", "jan"];
 
 const rules = {
     required: (value) => !!value || "Required.",
 };
 
-const createAccount = async () => {
+const create = async () => {
     const isValid = formRef.value.validate();
     if (isValid) {
         AccountRepository.createAccount(formData);

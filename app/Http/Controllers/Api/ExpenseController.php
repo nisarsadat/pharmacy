@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Expense;
+use App\Models\Account;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ExpenseResource;
 use App\Http\Requests\StoreExpenseRequest;
 use App\Http\Requests\UpdateExpenseRequest;
+
 
 class ExpenseController extends Controller
 {
@@ -38,9 +40,23 @@ class ExpenseController extends Controller
     /**
      * Store a new expense
      */
+
     public function store(StoreExpenseRequest $request)
     {
-        $expense = Expense::create($request->validated());
+        $data = $request->validated();
+
+        $account = Account::findOrFail($data['account_id']);
+
+        if ($account->price < $data['amount']) {
+            return response()->json([
+                'message' => 'Not enough balance'
+            ], 400);
+        }
+
+        $account->price -= $data['amount'];
+        $account->save();
+
+        $expense = Expense::create($data);
 
         return new ExpenseResource($expense);
     }
@@ -56,9 +72,28 @@ class ExpenseController extends Controller
     /**
      * Update an expense
      */
-    public function update(UpdateExpenseRequest $request, Expense $expense)
+   public function update(UpdateExpenseRequest $request, Expense $expense)
     {
-        $expense->update($request->validated());
+        $data = $request->validated();
+
+        $account = $expense->account;
+
+        // برگرداندن پول قبلی
+        $account->price += $expense->amount;
+        $account->save();
+
+        // چک کردن
+        if ($account->price < $data['amount']) {
+            return response()->json([
+                'message' => 'Not enough balance'
+            ], 400);
+        }
+
+        // کم کردن دوباره
+        $account->price -= $data['amount'];
+        $account->save();
+
+        $expense->update($data);
 
         return new ExpenseResource($expense);
     }
@@ -68,10 +103,17 @@ class ExpenseController extends Controller
      */
     public function destroy(Expense $expense)
     {
+        $account = $expense->account;
+
+        // return money
+        $account->price += $expense->amount;
+        $account->save();
+
         $expense->delete();
 
         return response()->json([
             'message' => 'موفقانه حذف شد!'
         ]);
     }
+    
 }
