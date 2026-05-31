@@ -29,6 +29,6 @@ class ProductTypeController extends Controller
     public function destroy(ProductType $productType)
     {
         $productType->delete();
-        return response()->json(['message' => 'Deleted']);
+        return response()->json(['message' => 'کاملا حذف شد']);
     }
 }
