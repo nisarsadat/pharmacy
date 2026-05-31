@@ -281,7 +281,7 @@
                             :disabled="loading"
                             @click="resetForm"
                         >
-                            پاک کردن
+                            پاک 
                         </v-btn>
 
                         <v-btn
