@@ -7,6 +7,7 @@
                 @click="logout"
                 icon="mdi-logout"
             ></v-btn>
+            
         </v-app-bar>
 
         <SidebarMenu />

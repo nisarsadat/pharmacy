@@ -75,7 +75,7 @@
 
         <v-row v-else dense>
             <v-col
-                v-for="product in filteredProducts"
+                v-for="product in paginatedProducts"
                 :key="product.id"
                 cols="12"
                 sm="6"
@@ -93,15 +93,15 @@
                             interval="3500"
                         >
                             <v-carousel-item
-    v-for="image in product.images"
-    :key="image.id || image.image"
->
-    <v-img
-        :src="getImageUrl(image.image)"
-        height="220"
-        cover
-    />
-</v-carousel-item>
+                                v-for="image in product.images"
+                                :key="image.id || image.image"
+                            >
+                                <v-img
+                                    :src="getImageUrl(image.image)"
+                                    height="220"
+                                    cover
+                                />
+                            </v-carousel-item>
                         </v-carousel>
 
                         <div v-else class="no-image">
@@ -210,7 +210,9 @@
 
                             <div class="info-box">
                                 <span>تاریخ انقضا</span>
-                                <strong :class="expireClass(product.expire_date)">
+                                <strong
+                                    :class="expireClass(product.expire_date)"
+                                >
                                     {{ product.expire_date || "ثبت نشده" }}
                                 </strong>
                             </div>
@@ -257,7 +259,14 @@
                 </v-card>
             </v-col>
         </v-row>
-
+        <div v-if="pageCount > 1" class="d-flex justify-center mt-6">
+            <v-pagination
+                v-model="currentPage"
+                :length="pageCount"
+                color="primary"
+                rounded="circle"
+            />
+        </div>
         <v-dialog v-model="deleteDialog" max-width="420">
             <v-card rounded="xl">
                 <v-card-title class="font-weight-bold">
@@ -303,17 +312,23 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useWareHouseRepository } from "../../repositories/WareHouseRepository";
 
 const router = useRouter();
 const WareHouseRepository = useWareHouseRepository();
-
+// for pagenation
+const currentPage = ref(1);
+const itemsPerPage = 10;
 const search = ref("");
+
 const deleteDialog = ref(false);
 const deleteLoading = ref(false);
 const selectedProduct = ref(null);
+watch(search, () => {
+    currentPage.value = 1;
+});
 
 const snackbar = ref({
     show: false,
@@ -321,7 +336,8 @@ const snackbar = ref({
     text: "",
 });
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
+const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
 
 const getImageUrl = (path) => {
     if (!path) return "";
@@ -423,6 +439,16 @@ const filteredProducts = computed(() => {
             .includes(q);
     });
 });
+const paginatedProducts = computed(() => {
+    const start = (currentPage.value - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+
+    return filteredProducts.value.slice(start, end);
+});
+
+const pageCount = computed(() => {
+    return Math.ceil(filteredProducts.value.length / itemsPerPage);
+});
 
 const totalQuantity = computed(() => {
     return filteredProducts.value.reduce((total, product) => {
@@ -432,7 +458,7 @@ const totalQuantity = computed(() => {
 
 const expiringProductsCount = computed(() => {
     return filteredProducts.value.filter((product) =>
-        isExpiringSoon(product.expire_date)
+        isExpiringSoon(product.expire_date),
     ).length;
 });
 

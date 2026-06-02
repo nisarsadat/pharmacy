@@ -17,16 +17,17 @@
                     />
                 </div>
 
-                <!-- PASSWORD -->
-                <div class="form-group">
-                    <label>Password</label>
-
-                    <input
-                        v-model="form.password"
-                        type="password"
-                        placeholder="Enter password"
-                    />
-                </div>
+                      <!-- Password (SHOW / HIDE BUTTON HERE) -->
+                <v-text-field
+                    v-model="form.password"
+                    :type="showPassword ? 'text' : 'password'"
+                    label="Password"
+                    prepend-inner-icon="mdi-lock"
+                    :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+                    @click:append-inner="showPassword = !showPassword"
+                    variant="outlined"
+                    class="mb-3"
+                />
 
                 <!-- BUTTON -->
                 <button :disabled="loading">
@@ -62,6 +63,9 @@ const form = reactive({
     email: "",
     password: "",
 });
+
+/* show/hide password */
+const showPassword = ref(false);
 
 // ===================================
 // LOGIN

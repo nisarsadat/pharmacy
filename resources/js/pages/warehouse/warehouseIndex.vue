@@ -103,7 +103,7 @@ const headers = [
     { title: "شماره صاحب", key: "owner_phone", sortable: false },
     { title: "اسم صاحب", key: "owner_name", sortable: false },
     { title: "نوت", key: "note", sortable: false },
-    { title: "action", key: "actions", sortable: false },
+    { title: "عمل", key: "actions", sortable: false },
 ];
 
 const createPopUp = () => {

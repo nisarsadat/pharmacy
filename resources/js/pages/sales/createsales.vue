@@ -233,7 +233,7 @@ const formData = reactive({
             product_id: "",
             quantity: "",
             price: "",
-            total: "",
+            total: "",  
         },
     ],
 });

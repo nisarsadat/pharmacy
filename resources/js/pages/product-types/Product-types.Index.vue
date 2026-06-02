@@ -102,7 +102,7 @@ const WareHouseRepository = useWareHouseRepository();
 const headers = [
     { title: "اسم", key: "name", sortable: false },
     { title: "نوت", key: "note", sortable: false },
-    { title: "action", key: "actions", sortable: false },
+    { title: "عمل", key: "actions", sortable: false },
 ];
 
 const createPopUp = () => {

@@ -42,14 +42,9 @@
                 md="6"
                 lg="4"
             >
-                <v-card
-                    class="sale-card pa-4"
-                    elevation="0"
-                >
+                <v-card class="sale-card pa-4" elevation="0">
                     <!-- Header -->
-                    <div
-                        class="d-flex justify-space-between align-center mb-4"
-                    >
+                    <div class="d-flex justify-space-between align-center mb-4">
                         <div>
                             <h3 class="text-h6 font-weight-bold">
                                 فروش #{{ sale.id }}
@@ -63,14 +58,8 @@
                         <!-- Menu -->
                         <v-menu>
                             <template #activator="{ props }">
-                                <v-btn
-                                    icon
-                                    variant="text"
-                                    v-bind="props"
-                                >
-                                    <v-icon>
-                                        mdi-dots-vertical
-                                    </v-icon>
+                                <v-btn icon variant="text" v-bind="props">
+                                    <v-icon> mdi-dots-vertical </v-icon>
                                 </v-btn>
                             </template>
 
@@ -94,18 +83,14 @@
                                     </v-list-item-title>
                                 </v-list-item>
 
-                                <v-list-item
-                                    @click="deleteItem(sale.id)"
-                                >
+                                <v-list-item @click="deleteItem(sale.id)">
                                     <template #prepend>
                                         <v-icon color="red">
                                             mdi-delete-outline
                                         </v-icon>
                                     </template>
 
-                                    <v-list-item-title>
-                                        حذف
-                                    </v-list-item-title>
+                                    <v-list-item-title> حذف </v-list-item-title>
                                 </v-list-item>
                             </v-list>
                         </v-menu>
@@ -114,10 +99,7 @@
                     <!-- Customer -->
                     <div class="customer-box mb-4">
                         <div class="d-flex align-center gap-4">
-                            <v-avatar
-                                size="58"
-                                class="customer-avatar"
-                            >
+                            <v-avatar size="58" class="customer-avatar">
                                 <v-img
                                     :src="`http://127.0.0.1:8000/storage/${sale.customer?.image}`"
                                     cover
@@ -130,9 +112,7 @@
                                     {{ sale.customer?.last_name }}
                                 </div>
 
-                                <div
-                                    class="text-caption text-grey-darken-1"
-                                >
+                                <div class="text-caption text-grey-darken-1">
                                     {{ sale.customer?.phone_number }}
                                 </div>
                             </div>
@@ -230,9 +210,7 @@
                                         class="d-flex align-center justify-space-between"
                                     >
                                         <!-- Left -->
-                                        <div
-                                            class="d-flex align-center gap-3"
-                                        >
+                                        <div class="d-flex align-center gap-3">
                                             <!-- Image -->
                                             <v-avatar
                                                 rounded="lg"
@@ -250,9 +228,7 @@
                                                 <div
                                                     class="font-weight-medium text-body-2"
                                                 >
-                                                    {{
-                                                        item.product?.name
-                                                    }}
+                                                    {{ item.product?.name }}
                                                 </div>
 
                                                 <div
@@ -260,9 +236,7 @@
                                                 >
                                                     <span>
                                                         Qty:
-                                                        {{
-                                                            item.quantity
-                                                        }}
+                                                        {{ item.quantity }}
                                                     </span>
 
                                                     <span>
@@ -297,15 +271,14 @@
                 :length="
                     Math.ceil(
                         WareHouseRepository.totalItems /
-                            WareHouseRepository.itemsPerPage
+                            WareHouseRepository.itemsPerPage,
                     )
                 "
                 rounded="circle"
                 @update:modelValue="
                     fetchsales({
                         page: WareHouseRepository.page,
-                        itemsPerPage:
-                            WareHouseRepository.itemsPerPage,
+                        itemsPerPage: WareHouseRepository.itemsPerPage,
                     })
                 "
             />
@@ -319,6 +292,21 @@ import { useRouter } from "vue-router";
 import { useWareHouseRepository } from "../../repositories/WareHouseRepository";
 
 const WareHouseRepository = useWareHouseRepository();
+
+const headers = [
+    { title: "آیدی مشتری", key: "customer_id", sortable: false },
+    { title: "آِیدی حساب", key: "account_id", sortable: false },
+    { title: "آِیدی گدام", key: "warehouse_id", sortable: false },
+    { title: "مقدار مجموعی", key: "total_amount", sortable: false },
+    { title: "تخفیف", key: "discount", sortable: false },
+    { title: "مقدار نهایی", key: "final_amount", sortable: false },
+    { title: "مقدار پرداختی", key: "paid_amount", sortable: false },
+    { title: "قرض", key: "due_amount", sortable: false },
+    { title: "بخش ", key: "items", sortable: false },
+    { title: "تاریخ", key: "date", sortable: false },
+    { title: "نوت", key: "note", sortable: false },
+    { title: "عمل", key: "actions", sortable: false },
+];
 
 const router = useRouter();
 
@@ -348,11 +336,7 @@ onMounted(() => {
 <style scoped>
 .sale-card {
     border-radius: 24px;
-    background: linear-gradient(
-        145deg,
-        #ffffff,
-        #f8fafc
-    );
+    background: linear-gradient(145deg, #ffffff, #f8fafc);
 
     border: 1px solid #edf2f7;
 
@@ -370,11 +354,7 @@ onMounted(() => {
 }
 
 .customer-box {
-    background: linear-gradient(
-        135deg,
-        #f8fafc,
-        #f1f5f9
-    );
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
 
     border-radius: 18px;
 
@@ -420,11 +400,7 @@ onMounted(() => {
 .product-card {
     border-radius: 16px;
 
-    background: linear-gradient(
-        135deg,
-        #ffffff,
-        #f8fafc
-    );
+    background: linear-gradient(135deg, #ffffff, #f8fafc);
 
     border: 1px solid #edf2f7;
 

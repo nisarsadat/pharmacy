@@ -137,7 +137,7 @@ const headers = [
     { title: "شماره تماس ", key: "phone_number", sortable: false },
     { title: " شماره تذکره ", key: "tazkira_number", sortable: false },
     { title: "نوت", key: "note", sortable: false },
-    { title: "action", key: "actions", sortable: false },
+    { title: "عمل", key: "actions", sortable: false },
 ];
 
 import { useRouter } from "vue-router";

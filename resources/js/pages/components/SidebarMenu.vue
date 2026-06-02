@@ -4,9 +4,9 @@
         app
         permanent
         location="right"
-        width="260"
-        class=" text-white"
-        color="primary"
+        width="180"
+        class="custom-sidebar"
+        color="white"
         elevation="1"
         border
     >
@@ -19,105 +19,114 @@
             density="comfortable"
             dir="rtl"
         >
-            <v-list-item
-                prepend-icon="mdi-home"
-                :to="'/'"
-                title="خانه"
-                link
-                class="rounded-xl mb-1"
-                color="text-white"
-            ></v-list-item>
+            <!-- Home -->
+            <v-list-item :to="'/'" link class="menu-item">
+                <div class="menu-content">
+                    <v-icon>mdi-home</v-icon>
+                    <span>خانه</span>
+                </div>
+            </v-list-item>
 
             <v-divider class="my-2"></v-divider>
 
-            <v-list-item
-                prepend-icon="mdi-warehouse"
-                :to="'/warehouse'"
-                title="گدام"
-                link
-                class="rounded-xl mb-1"
-            ></v-list-item>
+            <!-- Warehouse -->
+            <v-list-item :to="'/warehouse'" link class="menu-item">
+                <div class="menu-content">
+                    <v-icon>mdi-warehouse</v-icon>
+                    <span>گدام</span>
+                </div>
+            </v-list-item>
 
-            <v-list-item
-                prepend-icon="mdi-package-variant-closed"
-                :to="'/product-types'"
-                title="نوع پرودکت"
-                link
-                class="rounded-xl mb-1"
-            ></v-list-item>
+            <!-- Product Type -->
+            <v-list-item :to="'/product-types'" link class="menu-item">
+                <div class="menu-content">
+                    <v-icon>mdi-package-variant-closed</v-icon>
+                    <span>نوع محصول </span>
+                </div>
+            </v-list-item>
 
-            <v-list-item
-                prepend-icon="mdi-package-variant"
-                :to="'/products'"
-                title="پرودکت"
-                link
-                class="rounded-xl mb-1"
-            ></v-list-item>
-
-            <v-divider class="my-2"></v-divider>
-
-            <v-list-item
-                prepend-icon="mdi-account-group"
-                :to="'/customers'"
-                title="مشتری"
-                link
-                class="rounded-xl mb-1"
-            ></v-list-item>
-
-            <v-list-item
-                prepend-icon="mdi-sale"
-                :to="'/sales'"
-                title="فروشات"
-                link
-                class="rounded-xl mb-1"
-            ></v-list-item>
+            <!-- Products -->
+            <v-list-item :to="'/products'" link class="menu-item">
+                <div class="menu-content">
+                    <v-icon>mdi-package-variant</v-icon>
+                    <span>محصول</span>
+                </div>
+            </v-list-item>
 
             <v-divider class="my-2"></v-divider>
 
-            <v-list-item
-                prepend-icon="mdi-account-group"
-                :to="'/employees'"
-                title="کارمندان"
-                link
-                class="rounded-xl mb-1"
-            ></v-list-item>
+            <!-- Customers -->
+            <v-list-item :to="'/customers'" link class="menu-item">
+                <div class="menu-content">
+                    <v-icon>mdi-account-group</v-icon>
+                    <span>مشتری</span>
+                </div>
+            </v-list-item>
 
-            <v-list-item
-                prepend-icon="mdi-account-check"
-                :to="'/attendances'"
-                title="حاضری"
-                link
-                class="rounded-xl mb-1"
-            ></v-list-item>
+            <!-- Sales -->
+            <v-list-item :to="'/sales'" link class="menu-item">
+                <div class="menu-content">
+                    <v-icon>mdi-sale</v-icon>
+                    <span>فروشات</span>
+                </div>
+            </v-list-item>
 
+            <v-divider class="my-2"></v-divider>
+
+            <!-- Employees -->
+            <v-list-item :to="'/employees'" link class="menu-item">
+                <div class="menu-content">
+                    <v-icon>mdi-account-group</v-icon>
+                    <span>کارمندان</span>
+                </div>
+            </v-list-item>
+
+            <!-- Attendance -->
+            <v-list-item :to="'/attendances'" link class="menu-item">
+                <div class="menu-content">
+                    <v-icon>mdi-account-check</v-icon>
+                    <span>حاضری</span>
+                </div>
+            </v-list-item>
+
+            <!-- Finance -->
             <v-list-group value="Finance">
                 <template #activator="{ props }">
                     <v-list-item
                         v-bind="props"
-                        prepend-icon="mdi-cash"
-                        title="بخش مالی"
-                        class="font-weight-bold text-white"
-                    ></v-list-item>
+                        class="menu-item"
+                    >
+                        <div class="menu-content">
+                            <v-icon>mdi-cash</v-icon>
+                            <span>بخش مالی</span>
+                        </div>
+                    </v-list-item>
                 </template>
 
                 <v-list-item
                     v-for="(route, i) in financeRoutes"
                     :key="i"
-                    :prepend-icon="route.icon"
-                    :title="route.meta.title"
                     :to="route.path"
                     link
-                    class="rounded-xl ml-4 mb-1"
-                ></v-list-item>
+                    class="finance-item"
+                >
+                    <template #prepend>
+                        <v-icon>{{ route.icon }}</v-icon>
+                    </template>
+
+                    <v-list-item-title>
+                        {{ route.meta.title }}
+                    </v-list-item-title>
+                </v-list-item>
             </v-list-group>
 
-            <v-list-item
-                prepend-icon="mdi-account-plus"
-                :to="'/users'"
-                title="کاربران"
-                link
-                class="rounded-xl mb-1"
-            ></v-list-item>
+            <!-- Users -->
+            <v-list-item :to="'/users'" link class="menu-item">
+                <div class="menu-content">
+                    <v-icon>mdi-account-plus</v-icon>
+                    <span>کاربران</span>
+                </div>
+            </v-list-item>
         </v-list>
     </v-navigation-drawer>
 </template>
@@ -157,7 +166,53 @@ const financeRoutes = [
 </script>
 
 <style>
-.v-list-item-title {
+.custom-sidebar {
+    border-left: 1px solid #dcdcdc !important;
+}
+
+.menu-item {
+    min-height: 110px !important;
+    border: 1px solid #dcdcdc;
+    margin-bottom: 0 !important;
+    border-radius: 0 !important;
+    position: relative;
+    padding: 0 !important;
+}
+
+.menu-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+}
+
+.menu-content .v-icon {
+    font-size: 38px !important;
+    color: #0f2747;
+}
+
+.menu-content span {
+    font-size: 20px;
     font-weight: 500;
+    color: #0f2747;
+}
+
+.v-list-item--active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-bottom: 40px solid #4d7cff;
+    border-right: 40px solid transparent;
+}
+
+.finance-item {
+    min-height: 60px !important;
 }
 </style>
