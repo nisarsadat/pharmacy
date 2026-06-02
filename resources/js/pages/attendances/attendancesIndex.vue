@@ -201,21 +201,22 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, computed } from "vue";
+import { ref, reactive, onMounted, computed, watch } from "vue";
 import axios from "@/plugins/axios";
 import { usePeopleRepository } from "@/repositories/PeopleRepository";
 
 const repo = usePeopleRepository();
+
 // 📅 Selected date
 const selectedDate = ref(new Date().toISOString().substr(0, 10));
 
 // 👨‍💼 Employees list
 const employees = ref([]);
 
-// 🧠 Attendance Map
-const attendanceMap = reactive({});
+// 🧠 STORE BY DATE + EMPLOYEE
+const attendanceByDate = reactive({});
 
-// Snackbar state
+// Snackbar
 const snackbar = ref({
     show: false,
     text: "",
@@ -223,138 +224,105 @@ const snackbar = ref({
     icon: "mdi-check-circle",
 });
 
-// 🧾 Table headers
+// 🧾 headers
 const headers = [
-    { title: "Employee", key: "employee", sortable: true, width: "250" },
-    {
-        title: "Check In",
-        key: "check_in",
-        sortable: false,
-        align: "start",
-    },
-    {
-        title: "Check Out",
-        key: "check_out",
-        sortable: false,
-        align: "start",
-    },
-    {
-        title: "Status",
-        key: "status",
-        sortable: false,
-        align: "start",
-    },
-    { title: "Action", key: "actions", sortable: false },
+    { title: "Employee", key: "employee" },
+    { title: "Check In", key: "check_in" },
+    { title: "Check Out", key: "check_out" },
+    { title: "Status", key: "status" },
+    { title: "Action", key: "actions" },
 ];
 
-// Computed summary
-const getPresentCount = computed(() => {
-    return Object.values(attendanceMap).filter((a) => a.status === "present")
-        .length;
+// 🔥 ACTIVE MAP (for template usage)
+const attendanceMap = computed(() => {
+    return attendanceByDate[selectedDate.value] || {};
 });
 
-const getAbsentCount = computed(() => {
-    return Object.values(attendanceMap).filter((a) => a.status === "absent")
-        .length;
-});
+// ✅ INIT DATE STORAGE
+const initAttendanceForDate = () => {
+    if (!attendanceByDate[selectedDate.value]) {
+        attendanceByDate[selectedDate.value] = {};
+    }
 
-const getLeaveCount = computed(() => {
-    return Object.values(attendanceMap).filter((a) => a.status === "leave")
-        .length;
-});
-
-// Helper function
-const getInitials = (name) => {
-    return name
-        .split(" ")
-        .map((word) => word[0])
-        .join("")
-        .toUpperCase()
-        .slice(0, 2);
-};
-
-// 🚀 Fetch employees
-const fetchEmployees = async () => {
-    try {
-        const res = await axios.get("employees");
-        employees.value = res.data.data;
-
-        // Initialize attendance map
-        employees.value.forEach((emp) => {
-            attendanceMap[emp.id] = {
+    employees.value.forEach((emp) => {
+        if (!attendanceByDate[selectedDate.value][emp.id]) {
+            attendanceByDate[selectedDate.value][emp.id] = {
                 employee_id: emp.id,
                 check_in: "",
                 check_out: "",
-                status: "present",
+                status: "",   // ❗ important: empty by default (NOT present)
                 note: "",
             };
-        });
-    } catch (error) {
-        console.error(error);
-        snackbar.value = {
-            show: true,
-            text: "Failed to load employees",
-            color: "error",
-            icon: "mdi-alert-circle",
-        };
-    }
+        }
+    });
 };
 
-// 💾 Submit all attendance
+// 👇 when date changes → ensure data exists (DO NOT reset old data)
+watch(selectedDate, () => {
+    initAttendanceForDate();
+});
+
+// 🚀 fetch employees
+const fetchEmployees = async () => {
+    const res = await axios.get("employees");
+    employees.value = res.data.data;
+
+    initAttendanceForDate();
+};
+
+// 💾 BULK SAVE
 const submitAttendance = async () => {
-    const payload = Object.values(attendanceMap).map((item) => ({
+    const payload = Object.values(attendanceMap.value).map((item) => ({
         ...item,
         date: selectedDate.value,
     }));
 
-    try {
-        await axios.post("attendances/bulk", { attendances: payload });
-        snackbar.value = {
-            show: true,
-            text: "Attendance saved successfully",
-            color: "success",
-            icon: "mdi-check-circle",
-        };
-    } catch (error) {
-        console.error(error);
-        snackbar.value = {
-            show: true,
-            text: "Failed to save attendance",
-            color: "error",
-            icon: "mdi-alert-circle",
-        };
-    }
+    await axios.post("attendances/bulk", { attendances: payload });
+
+    snackbar.value = {
+        show: true,
+        text: "Saved successfully",
+        color: "success",
+        icon: "mdi-check-circle",
+    };
 };
+
+// 💾 SINGLE SAVE
 const saveSingleAttendance = async (employee) => {
     const data = {
-        ...attendanceMap[employee.id],
+        ...attendanceMap.value[employee.id],
         date: selectedDate.value,
     };
 
-    try {
-        await repo.createattendances(data);
+    await repo.createattendances(data);
 
-        snackbar.value = {
-            show: true,
-            text: `Attendance saved for ${employee.name}`,
-            color: "success",
-            icon: "mdi-check-circle",
-        };
-    } catch (error) {
-        console.error(error);
-        snackbar.value = {
-            show: true,
-            text: `Failed for ${employee.name}`,
-            color: "error",
-            icon: "mdi-alert-circle",
-        };
-    }
+    snackbar.value = {
+        show: true,
+        text: `Saved for ${employee.name}`,
+        color: "success",
+        icon: "mdi-check-circle",
+    };
 };
-onMounted(() => {
-    fetchEmployees();
-});
-</script>
 
+// 👇 counts
+const getPresentCount = computed(() =>
+    Object.values(attendanceMap.value).filter((a) => a.status === "present").length
+);
+
+const getAbsentCount = computed(() =>
+    Object.values(attendanceMap.value).filter((a) => a.status === "absent").length
+);
+
+const getLeaveCount = computed(() =>
+    Object.values(attendanceMap.value).filter((a) => a.status === "leave").length
+);
+
+// 👇 initials
+const getInitials = (name) =>
+    name.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2);
+
+onMounted(fetchEmployees);
+</script>
 <style scoped>
 .attendance-container {
     max-width: 1400px;
