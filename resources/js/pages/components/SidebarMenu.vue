@@ -14,7 +14,7 @@
 
         <v-list
             nav
-            v-model:opened="openGroups"
+           
             class="px-1"
             density="comfortable"
             dir="rtl"
@@ -90,35 +90,52 @@
             </v-list-item>
 
             <!-- Finance -->
-            <v-list-group value="Finance">
-                <template #activator="{ props }">
-                    <v-list-item
-                        v-bind="props"
-                        class="menu-item"
-                    >
-                        <div class="menu-content">
-                            <v-icon>mdi-cash</v-icon>
-                            <span>بخش مالی</span>
-                        </div>
-                    </v-list-item>
-                </template>
+          <v-menu
+    location="left"
+    open-on-click
+    :close-on-content-click="true"
+    offset="10"
+>
+    <template #activator="{ props }">
+        <v-list-item
+            v-bind="props"
+            class="menu-item"
+        >
+            <div class="menu-content">
+                <v-icon>mdi-cash</v-icon>
+                <span>بخش مالی</span>
+            </div>
+        </v-list-item>
+    </template>
 
-                <v-list-item
-                    v-for="(route, i) in financeRoutes"
-                    :key="i"
-                    :to="route.path"
-                    link
-                    class="finance-item"
-                >
-                    <template #prepend>
-                        <v-icon>{{ route.icon }}</v-icon>
-                    </template>
+ <v-card
+    min-width="280"
+    elevation="12"
+    class="finance-menu-card"
+>
+    <div class="finance-menu-header">
+        بخش مالی
+    </div>
 
-                    <v-list-item-title>
-                        {{ route.meta.title }}
-                    </v-list-item-title>
-                </v-list-item>
-            </v-list-group>
+    <v-list bg-color="white ">
+        <v-list-item
+            v-for="(route, i) in financeRoutes"
+            :key="i"
+            :to="route.path"
+            link
+            class="finance-menu-item"
+        >
+            <template #prepend>
+                <v-icon>{{ route.icon }}</v-icon>
+            </template>
+
+            <v-list-item-title>
+                {{ route.meta.title }}
+            </v-list-item-title>
+        </v-list-item>
+    </v-list>
+</v-card>
+</v-menu>
 
             <!-- Users -->
             <v-list-item :to="'/users'" link class="menu-item">
@@ -135,7 +152,6 @@
 import { ref } from "vue";
 
 const drawer = ref(true);
-const openGroups = ref(["Finance"]);
 
 const financeRoutes = [
     {
@@ -167,16 +183,78 @@ const financeRoutes = [
 
 <style>
 .custom-sidebar {
-    border-left: 1px solid #dcdcdc !important;
+    border-left: none !important;
+    box-shadow: none !important;
 }
 
 .menu-item {
     min-height: 110px !important;
-    border: 1px solid #dcdcdc;
+    border: none !important;
+    border-bottom: 1px solid #dcdcdc !important;
     margin-bottom: 0 !important;
     border-radius: 0 !important;
     position: relative;
     padding: 0 !important;
+    transition: all 0.3s ease;
+
+}
+.v-divider {
+    display: none !important;
+}
+
+/* Active item */
+.v-list-item--active {
+    background-color: #e8f0ff !important;
+    border-bottom: 3px solid #4d7cff !important;
+}
+
+/* Active icon */
+.v-list-item--active .v-icon {
+    color: #4d7cff !important;
+}
+
+/* Active text */
+.v-list-item--active span {
+    color: #4d7cff !important;
+    font-weight: bold;
+}
+.v-overlay__content .v-card {
+    border-radius: 16px !important;
+    overflow: hidden;
+}
+
+.v-overlay__content .v-list-item {
+    min-height: 56px;
+}
+.finance-menu-card {
+    border-radius: 16px !important;
+    overflow: hidden;
+}
+
+.finance-menu-header {
+    background: linear-gradient(135deg, #4d7cff, #6b95ff);
+    color: white;
+    padding: 14px 18px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.finance-menu-item {
+    transition: all 0.25s ease;
+    border-right: 4px solid transparent;
+}
+
+.finance-menu-item:hover {
+    background: #eef4ff;
+    border-right-color: #4d7cff;
+}
+
+.finance-menu-item .v-icon {
+    color: #4d7cff;
+}
+
+.finance-menu-item:hover .v-icon {
+    transform: scale(1.1);
 }
 
 .menu-content {
@@ -214,5 +292,13 @@ const financeRoutes = [
 
 .finance-item {
     min-height: 60px !important;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
 }
 </style>

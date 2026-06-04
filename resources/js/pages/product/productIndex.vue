@@ -501,7 +501,7 @@ const deleteProduct = async () => {
 onMounted(async () => {
     await WareHouseRepository.fetchproducts({
         page: 1,
-        itemsPerPage: 1000,
+        itemsPerPage: 5,
     });
 });
 </script>
