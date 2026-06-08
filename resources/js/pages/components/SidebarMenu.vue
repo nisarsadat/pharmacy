@@ -12,15 +12,10 @@
     >
         <v-divider class="mb-3"></v-divider>
 
-        <v-list
-            nav
-           
-            class="px-1"
-            density="comfortable"
-            dir="rtl"
-        >
+        <v-list nav class="px-1" density="comfortable" dir="rtl">
             <!-- Home -->
-            <v-list-item :to="'/'" link class="menu-item">
+            <!-- Home -->
+            <v-list-item to="/" exact class="menu-item">
                 <div class="menu-content">
                     <v-icon>mdi-home</v-icon>
                     <span>خانه</span>
@@ -37,49 +32,121 @@
                 </div>
             </v-list-item>
 
-            <!-- Product Type -->
-            <v-list-item :to="'/product-types'" link class="menu-item">
+            <!-- Product Types -->
+            <v-list-item to="/product-types" class="menu-item">
                 <div class="menu-content">
-                    <v-icon>mdi-package-variant-closed</v-icon>
-                    <span>نوع محصول </span>
+                    <v-icon>mdi-shape</v-icon>
+                    <span>نوعیت محصول</span>
                 </div>
             </v-list-item>
 
-            <!-- Products -->
-            <v-list-item :to="'/products'" link class="menu-item">
-                <div class="menu-content">
-                    <v-icon>mdi-package-variant</v-icon>
-                    <span>محصول</span>
-                </div>
-            </v-list-item>
+            <!-- Product -->
+            <v-menu open-on-hover location="left" offset="10">
+                <template #activator="{ props }">
+                    <v-list-item v-bind="props" class="menu-item">
+                        <div class="menu-content">
+                            <v-icon>mdi-package-variant</v-icon>
+                            <span>محصول</span>
+                        </div>
+                    </v-list-item>
+                </template>
+
+                <v-card min-width="220">
+                    <v-list>
+                        <v-list-item to="/products">
+                            <v-list-item-title>
+                                لیست محصولات
+                            </v-list-item-title>
+                        </v-list-item>
+
+                        <v-list-item to="/products/create">
+                            <v-list-item-title> ایجاد محصول </v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                </v-card>
+            </v-menu>
 
             <v-divider class="my-2"></v-divider>
 
             <!-- Customers -->
-            <v-list-item :to="'/customers'" link class="menu-item">
-                <div class="menu-content">
-                    <v-icon>mdi-account-group</v-icon>
-                    <span>مشتری</span>
-                </div>
-            </v-list-item>
+            <v-menu open-on-hover location="left" offset="10">
+                <template #activator="{ props }">
+                    <v-list-item v-bind="props" class="menu-item">
+                        <div class="menu-content">
+                            <v-icon>mdi-account-group</v-icon>
+                            <span>مشتری</span>
+                        </div>
+                    </v-list-item>
+                </template>
+
+                <v-card min-width="220">
+                    <v-list>
+                        <v-list-item to="/customers">
+                            <v-list-item-title>
+                                لیست مشتریان
+                            </v-list-item-title>
+                        </v-list-item>
+
+                        <v-list-item to="/customers/create">
+                            <v-list-item-title> ایجاد مشتری </v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                </v-card>
+            </v-menu>
 
             <!-- Sales -->
-            <v-list-item :to="'/sales'" link class="menu-item">
-                <div class="menu-content">
-                    <v-icon>mdi-sale</v-icon>
-                    <span>فروشات</span>
-                </div>
-            </v-list-item>
+            <v-menu open-on-hover location="left" offset="10">
+                <template #activator="{ props }">
+                    <v-list-item v-bind="props" class="menu-item">
+                        <div class="menu-content">
+                            <v-icon>mdi-sale</v-icon>
+                            <span>فروشات</span>
+                        </div>
+                    </v-list-item>
+                </template>
+
+                <v-card min-width="220">
+                    <v-list>
+                        <v-list-item to="/sales">
+                            <v-list-item-title> لیست فروشات </v-list-item-title>
+                        </v-list-item>
+
+                        <v-list-item to="/sales/create">
+                            <v-list-item-title> ایجاد فروش </v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                </v-card>
+            </v-menu>
 
             <v-divider class="my-2"></v-divider>
 
             <!-- Employees -->
-            <v-list-item :to="'/employees'" link class="menu-item">
-                <div class="menu-content">
-                    <v-icon>mdi-account-group</v-icon>
-                    <span>کارمندان</span>
-                </div>
-            </v-list-item>
+            <v-menu open-on-hover location="left" offset="10">
+                <template #activator="{ props }">
+                    <v-list-item v-bind="props" class="menu-item">
+                        <div class="menu-content">
+                            <v-icon>mdi-account-group</v-icon>
+                            <span>کارمندان</span>
+                        </div>
+                    </v-list-item>
+                </template>
+
+                <v-card min-width="220">
+                    <v-list>
+                        <v-list-item to="/employees">
+                            <v-list-item-title>
+                                لیست کارمندان
+                            </v-list-item-title>
+                        </v-list-item>
+
+                        <v-list-item to="/employees/create">
+                            <v-list-item-title>
+                                ایجاد کارمند
+                            </v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                </v-card>
+            </v-menu>
 
             <!-- Attendance -->
             <v-list-item :to="'/attendances'" link class="menu-item">
@@ -90,53 +157,38 @@
             </v-list-item>
 
             <!-- Finance -->
-          <v-menu
-    location="left"
-    open-on-click
-    :close-on-content-click="true"
-    offset="10"
->
-    <template #activator="{ props }">
-        <v-list-item
-            v-bind="props"
-            class="menu-item"
-        >
-            <div class="menu-content">
-                <v-icon>mdi-cash</v-icon>
-                <span>بخش مالی</span>
-            </div>
-        </v-list-item>
-    </template>
+            <v-menu open-on-hover location="left" offset="10">
+                <template #activator="{ props }">
+                    <v-list-item v-bind="props" class="menu-item">
+                        <div class="menu-content">
+                            <v-icon>mdi-cash</v-icon>
+                            <span>بخش مالی</span>
+                        </div>
+                    </v-list-item>
+                </template>
 
- <v-card
-    min-width="280"
-    elevation="12"
-    class="finance-menu-card"
->
-    <div class="finance-menu-header">
-        بخش مالی
-    </div>
+                <v-card min-width="250">
+                    <v-list>
+                        <v-list-item to="/accounts">
+                            <v-list-item-title>حساب‌ها</v-list-item-title>
+                        </v-list-item>
 
-    <v-list bg-color="white ">
-        <v-list-item
-            v-for="(route, i) in financeRoutes"
-            :key="i"
-            :to="route.path"
-            link
-            class="finance-menu-item"
-        >
-            <template #prepend>
-                <v-icon>{{ route.icon }}</v-icon>
-            </template>
+                        <v-list-item to="/expense-category">
+                            <v-list-item-title
+                                >کتگوری مصارفات</v-list-item-title
+                            >
+                        </v-list-item>
 
-            <v-list-item-title>
-                {{ route.meta.title }}
-            </v-list-item-title>
-        </v-list-item>
-    </v-list>
-</v-card>
-</v-menu>
+                        <v-list-item to="/expenses">
+                            <v-list-item-title>مصارفات</v-list-item-title>
+                        </v-list-item>
 
+                        <v-list-item to="/Owner-pickup">
+                            <v-list-item-title>برداشت صاحب</v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                </v-card>
+            </v-menu>
             <!-- Users -->
             <v-list-item :to="'/users'" link class="menu-item">
                 <div class="menu-content">
@@ -196,7 +248,6 @@ const financeRoutes = [
     position: relative;
     padding: 0 !important;
     transition: all 0.3s ease;
-
 }
 .v-divider {
     display: none !important;
@@ -300,5 +351,15 @@ const financeRoutes = [
     align-items: center;
     gap: 10px;
     text-align: center;
+}
+.router-link-exact-active {
+    background-color: #e8f0ff !important;
+    border-bottom: 3px solid #4d7cff !important;
+}
+
+.router-link-exact-active .v-icon,
+.router-link-exact-active span {
+    color: #4d7cff !important;
+    font-weight: bold;
 }
 </style>

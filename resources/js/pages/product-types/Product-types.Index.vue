@@ -1,17 +1,17 @@
 <template>
+    <!-- TEST -->
+    <h1>PRODUCT TYPE PAGE</h1>
+
     <!-- Dialogs -->
     <Update v-if="WareHouseRepository.updateDialog" />
     <Create v-if="WareHouseRepository.createDialog" />
 
-    <!-- Toolbar -->
-
     <!-- Search & Create Button -->
     <v-layout class="pt-6">
         <v-row class="justify-space-between p-6 pr-8">
-            <!-- Search Field -->
             <v-col cols="12" sm="3">
                 <v-text-field
-                    v-model="useWareHouseRepository.search"
+                    v-model="WareHouseRepository.search"
                     label="جستجو"
                     prepend-inner-icon="mdi-magnify"
                     variant="outlined"
@@ -20,7 +20,6 @@
                 />
             </v-col>
 
-            <!-- Create Button -->
             <div class="btn d-flex gap-4">
                 <v-btn color="primary" variant="flat" @click="createPopUp">
                     جدید
@@ -45,9 +44,8 @@
                         item-value="id"
                         item-key="id"
                         hover
-                        @update:options="fetchproduct-types"
+                        @update:options="fetchproducttype"
                     >
-                        <!-- Actions Column -->
                         <template v-slot:item.actions="{ item }">
                             <v-menu>
                                 <template v-slot:activator="{ props }">
@@ -64,9 +62,9 @@
                                             class="cursor-pointer d-flex gap-3 justify-left pb-3"
                                             @click="editItem(item.id)"
                                         >
-                                            <v-icon color="green"
-                                                >mdi-square-edit-outline</v-icon
-                                            >
+                                            <v-icon color="green">
+                                                mdi-square-edit-outline
+                                            </v-icon>
                                             ویرایش
                                         </v-list-item-title>
 
@@ -74,9 +72,9 @@
                                             class="cursor-pointer d-flex gap-3"
                                             @click="deleteItem(item.id)"
                                         >
-                                            <v-icon color="red"
-                                                >mdi-delete-outline</v-icon
-                                            >
+                                            <v-icon color="red">
+                                                mdi-delete-outline
+                                            </v-icon>
                                             حذف کردن
                                         </v-list-item-title>
                                     </v-list-item>
@@ -91,11 +89,12 @@
 </template>
 
 <script setup>
+
 import { onMounted } from "vue";
 import { useWareHouseRepository } from "../../repositories/WareHouseRepository";
+
 import Create from "./createproducttypes.vue";
 import Update from "./updateproducttypes.vue";
-import { flipAlign } from "vuetify/lib/util/anchor.mjs";
 
 const WareHouseRepository = useWareHouseRepository();
 
@@ -115,6 +114,7 @@ const deleteItem = (id) => {
 
 const editItem = (id) => {
     WareHouseRepository.producttypes = {};
+
     if (
         !WareHouseRepository.producttypes ||
         Object.keys(WareHouseRepository.producttypes).length === 0
@@ -133,7 +133,10 @@ const fetchproducttype = (options) => {
 };
 
 onMounted(() => {
-    fetchproducttype({ page: 1, itemsPerPage: 5 });
+    fetchproducttype({
+        page: 1,
+        itemsPerPage: 5,
+    });
 });
 </script>
 

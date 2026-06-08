@@ -17,7 +17,7 @@
                 />
             </v-col>
 
-            <div class="btn d-flex gap-4">
+            <div class="btn d-flex justify-end">
                 <v-btn color="primary" variant="flat" @click="createPopUp">
                     <v-icon start>mdi-plus</v-icon>
                     جدید

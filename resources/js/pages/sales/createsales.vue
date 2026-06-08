@@ -33,35 +33,48 @@
                         </v-col>
 
                         <v-col cols="6">
-                            <v-select
-                                v-model="formData.account_id"
-                                :items="WareHouseRepository.accountForDropDown"
-                                label="حساب"
-                                item-title="label"
-                                item-value="value"
-                                :rules="[rules.required]"
-                                variant="outlined"
-                                density="compact"
-                            />
+                            <v-col cols="6">
+                                <v-select
+                                    v-model="formData.account_id"
+                                    :items="WareHouseRepository.accountForDropDown"
+                                    label="حساب"
+                                    item-title="label"
+                                    item-value="value"
+                                    :rules="[rules.required]"
+                                    variant="outlined"
+                                    density="compact"
+                                />
+
+                                <div class="mt-2 d-flex justify-end">
+                                    <v-btn
+                                        color="primary"
+                                        variant="flat"
+                                        @click="openCreateAccount"
+                                    >
+                                        <v-icon start>mdi-plus</v-icon>
+                                        ایجاد حساب جدید
+                                    </v-btn>
+                                </div>
+                            </v-col>
                         </v-col>
+
                         <v-col cols="6">
                             <v-select
                                 v-model="formData.warehouse_id"
-                                :items="
-                                    WareHouseRepository.warehouseForDropDown
-                                "
-                                label="  گدام "
+                                :items="WareHouseRepository.warehouseForDropDown"
+                                label="گدام"
                                 item-title="label"
-                                :rules="[rules.required]"
                                 item-value="value"
+                                :rules="[rules.required]"
                                 variant="outlined"
                                 density="compact"
                             />
                         </v-col>
+
                         <v-col cols="6">
                             <v-text-field
                                 v-model="formData.total_amount"
-                                label="مقدار مجموعی "
+                                label="مقدار مجموعی"
                                 variant="outlined"
                                 type="number"
                                 density="compact"
@@ -72,7 +85,7 @@
                         <v-col cols="6">
                             <v-text-field
                                 v-model="formData.discount"
-                                label="تخفیف "
+                                label="تخفیف"
                                 variant="outlined"
                                 type="number"
                                 density="compact"
@@ -86,6 +99,7 @@
                                 density="compact"
                             />
                         </v-col>
+
                         <v-col cols="6">
                             <v-text-field
                                 v-model="formData.paid_amount"
@@ -113,24 +127,19 @@
                                     :key="index"
                                     class="mb-2"
                                 >
-                                    <!-- Product ID -->
                                     <v-col cols="3">
                                         <v-select
                                             v-model="item.product_id"
-                                            :items="
-                                                WareHouseRepository.ProductForDropDown
-                                            "
-                                            label="Product ID"
+                                            :items="WareHouseRepository.ProductForDropDown"
+                                            label="محصول"
                                             item-title="label"
                                             :rules="[rules.required]"
                                             item-value="value"
-                                            type="number"
                                             variant="outlined"
                                             density="compact"
                                         />
                                     </v-col>
 
-                                    <!-- Quantity -->
                                     <v-col cols="3">
                                         <v-text-field
                                             v-model="item.quantity"
@@ -141,7 +150,6 @@
                                         />
                                     </v-col>
 
-                                    <!-- Price -->
                                     <v-col cols="3">
                                         <v-text-field
                                             v-model="item.price"
@@ -152,7 +160,6 @@
                                         />
                                     </v-col>
 
-                                    <!-- Total -->
                                     <v-col cols="2">
                                         <v-text-field
                                             v-model="item.total"
@@ -160,10 +167,10 @@
                                             type="number"
                                             variant="outlined"
                                             density="compact"
+                                            readonly
                                         />
                                     </v-col>
 
-                                    <!-- Delete Button -->
                                     <v-col cols="1" class="d-flex align-center">
                                         <v-btn
                                             icon
@@ -176,7 +183,6 @@
                                     </v-col>
                                 </v-row>
 
-                                <!-- Add Item Button -->
                                 <v-btn
                                     color="primary"
                                     variant="flat"
@@ -197,25 +203,30 @@
                 </v-form>
             </v-card-text>
 
-            <!-- Actions -->
             <v-card-actions class="px-6 pb-6">
                 <v-btn color="light-blue-darken-1" @click="createsales">
                     ثبت کردن
                 </v-btn>
             </v-card-actions>
         </v-card>
+
+        <CreateAccount />
     </v-container>
 </template>
 
 <script setup>
-import { reactive, ref, onMounted } from "vue";
+import { reactive, ref, watch } from "vue";
 import { useWareHouseRepository } from "../../repositories/WareHouseRepository";
-const WareHouseRepository = useWareHouseRepository();
 import { useRouter } from "vue-router";
+import { useAccountRepository } from "../../repositories/AccountRepository";
+import CreateAccount from "../accounts/CreateAccount.vue";
 
+const WareHouseRepository = useWareHouseRepository();
+const AccountRepository = useAccountRepository();
 const router = useRouter();
 const formRef = ref(null);
 
+// ✅ MUST be defined BEFORE watch (fix crash)
 const formData = reactive({
     note: "",
     date: "",
@@ -227,18 +238,32 @@ const formData = reactive({
     final_amount: "",
     paid_amount: "",
     due_amount: "",
-
     items: [
         {
             product_id: "",
             quantity: "",
             price: "",
-            total: "",  
+            total: "",
         },
     ],
 });
 
-// Example account types, you can modify this
+// ✅ safe watch (same logic, no change)
+watch(
+    () => formData.items,
+    (items) => {
+        items.forEach((item) => {
+            const qty = Number(item.quantity) || 0;
+            const price = Number(item.price) || 0;
+            item.total = qty * price;
+        });
+    },
+    { deep: true }
+);
+
+const openCreateAccount = () => {
+    AccountRepository.createDialog = true;
+};
 
 const rules = {
     required: (value) => !!value || "Required.",
@@ -262,10 +287,11 @@ const createsales = async () => {
 
     if (isValid) {
         await WareHouseRepository.createsales(formData);
-
         router.push("/sales");
     }
 };
+
+// dropdown loads
 WareHouseRepository.fetchaccountForDropDowns();
 WareHouseRepository.fetchcustomerForDropDowns();
 WareHouseRepository.fetchwarehouseForDropDowns();

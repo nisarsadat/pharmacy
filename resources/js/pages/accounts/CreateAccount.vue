@@ -56,7 +56,6 @@
                                 <v-text-field
                                     v-model="formData.account_type"
                                     label="account type"
-                                    type="number"
                                     variant="outlined"
                                     density="compact"
                                 />
